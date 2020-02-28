@@ -33,6 +33,16 @@
 */ 
 //#define CLEAN_MODE_SWITCHING_SUPPORT  // Enable CLEAN MODE SWITCHING SUPPORT
 
+/**
+ * DEFAULT STARTUP KNOP LED COLOR
+ * Choose one of the following numbers -->  1: LED_OFF,     2: LED_WHITE,   3: LED_RED,
+ *                                          4: LED_ORANGE,  5: LED_YELLOW,  6: LED_GREEN,
+ *                                          7: LED_BLUE,    8: LED_INDIGO,  9: LED_VIOLET
+ * Default value is: 1 for LED_OFF
+ * 
+*/
+//#define STARTUP_KNOP_LED_COLOR 3 //LED_RED
+
 //===========================================================================
 //============================ TFT Mode Settings ============================
 //===========================================================================
