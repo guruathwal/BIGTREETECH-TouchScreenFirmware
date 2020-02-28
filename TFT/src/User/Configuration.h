@@ -15,14 +15,14 @@
 
 // Marlin Mode Background & Font Color Options
 // Current color options from lcd.h: BLACK, BLUE, BROWN, BRRED, CYAN, GBLUE, GRAY, GREEN, MAGENTA, RED, WHITE, YELLOW
-#define ST7920_BKCOLOR BLACK
-#define ST7920_FNCOLOR YELLOW
+#define ST7920_BKCOLOR RED
+#define ST7920_FNCOLOR WHITE
 
 // Text displayed at the top of the LCD in Marlin Mode.
 //#define ST7920_BANNER_TEXT "LCD12864 Simulator"
 
 // Run Marlin Mode fullscreen. Not recommended for TFT24.
-//#define ST7920_FULLSCREEN
+#define ST7920_FULLSCREEN
 
 /**
  * CLEAN MODE SWITCHING SUPPORT
@@ -31,7 +31,7 @@
  * expansion port and have it work seamlessly no matter which mode the TFT is in. 
  * Only for TFT24 V1.1, TFT35 V3.0 or TFT28 V3.0
 */ 
-//#define CLEAN_MODE_SWITCHING_SUPPORT  // Enable CLEAN MODE SWITCHING SUPPORT
+#define CLEAN_MODE_SWITCHING_SUPPORT  // Enable CLEAN MODE SWITCHING SUPPORT
 
 /**
  * DEFAULT STARTUP KNOP LED COLOR
@@ -41,7 +41,7 @@
  * Default value is: 1 for LED_OFF
  * 
 */
-//#define STARTUP_KNOP_LED_COLOR 3 //LED_RED
+#define STARTUP_KNOP_LED_COLOR 3 //LED_RED
 
 //===========================================================================
 //============================ TFT Mode Settings ============================
@@ -60,7 +60,7 @@
 
 #define TOOL_NUM     1    // set in 1~6
 #define EXTRUDER_NUM 1    // set in 1~6
-#define FAN_NUM      1    // set in 1~6
+#define FAN_NUM      2    // set in 1~6
 
 //                       PLA      PETG       ABS
 #define PREHEAT_BED      {60,      70,       100}
@@ -77,8 +77,8 @@
 #define EXTRUDER_ID      {"E0",   "E1",      "E2",      "E3",      "E4",      "E5"}
 
 #define FAN_MAX_PWM      {255,       255,       255,       255,       255,       255}
-#define FAN_ID           {"F0",    "F1",    "F2",    "F3",    "F4",    "F5"}
-#define FAN_CMD          {"M106 P0", "M106 P1", "M106 P2", "M106 P3", "M106 P4", "M106 P5" };
+#define FAN_ID           {"FIL",     "Ctrl",    "F2",    "F3",    "F4",    "F5"}
+#define FAN_CMD          {"M106 P0", "M710", "M106 P2", "M106 P3", "M106 P4", "M106 P5" };
 
 #define SPEED_ID         {"Sp.", "Fr."}
 

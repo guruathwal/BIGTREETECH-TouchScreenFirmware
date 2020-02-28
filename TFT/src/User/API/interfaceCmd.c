@@ -310,7 +310,21 @@ void sendQueueCmd(void)
             }
             break;
           }
-
+          case 710: //M710
+          {
+            if(cmd_seen('S'))
+            {
+              fanSetSpeed(1, cmd_value()); 
+            }
+            else
+            {
+              char buf[12];
+              sprintf(buf, "S%d\n", fanGetSpeed(1));
+              strcat(infoCmd.queue[infoCmd.index_r].gcode,(const char*)buf);
+              fanSetSendWaiting(1, false);
+            }
+            break;
+          }
           case 107: //M107
           {
             u8 i = 0;
