@@ -52,6 +52,10 @@ void Hardware_GenericInit(void)
   }
   GUI_RestoreColorDefault();
   infoMenuSelect();
+
+  #ifdef LED_color_PIN
+    KnopLED_Update();
+  #endif
 }
 
 int main(void)

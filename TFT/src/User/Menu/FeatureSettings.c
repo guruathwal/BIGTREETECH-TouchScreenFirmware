@@ -45,7 +45,6 @@ const LABEL itemMoveSpeed[ITEM_SPEED_NUM] = {
 const  u8 item_movespeed[ITEM_SPEED_NUM] = {LABEL_NORMAL_SPEED, LABEL_SLOW_SPEED, LABEL_FAST_SPEED};
 
 #ifdef LED_color_PIN
-  #define LED_color_NUM 9
   const LABEL itemLedcolor[LED_color_NUM] = {
                                               //label
                                               LABEL_OFF,
@@ -93,6 +92,7 @@ typedef enum
   SKEY_FILELIST,
   #ifdef LED_color_PIN
   SKEY_KNOB,
+  SKEY_KNOB_UPDATE,
   #endif
   SKEY_COUNT //keep this always at the end
 }SKEY_LIST; 
@@ -217,13 +217,17 @@ void updateFeatureSettings(uint8_t key_val)
     break;
 
     #ifdef LED_color_PIN
-    case SKEY_KNOB:            
-    infoSettings.led_color = (infoSettings.led_color + 1) % LED_color_NUM;                
+    case SKEY_KNOB:
+    infoSettings.led_color = (infoSettings.led_color + 1 ) % LED_color_NUM;                
     settingPage[item_index].valueLabel = itemLedcolor[infoSettings.led_color];
     featureSettingsItems.items[key_val] = settingPage[item_index];
     ws2812_send_DAT(led_color[infoSettings.led_color]);
 
     menuDrawListItem(&featureSettingsItems.items[key_val], key_val);
+    break;
+
+    case SKEY_KNOB_UPDATE:
+      ws2812_send_DAT(led_color[infoSettings.led_color]);
     break;
     #endif
 
@@ -296,7 +300,7 @@ void loadFeatureSettings(){
         break;
 
       #ifdef LED_color_PIN
-        case SKEY_KNOB:                           
+        case SKEY_KNOB:
         settingPage[item_index].valueLabel = itemLedcolor[infoSettings.led_color];
         featureSettingsItems.items[i] = settingPage[item_index];
         break;
@@ -388,3 +392,9 @@ void menuFeatureSettings(void)
     storePara();
   }
 }
+
+#ifdef LED_color_PIN
+void KnopLED_Update(){
+  updateFeatureSettings(SKEY_KNOB_UPDATE);
+}
+#endif
