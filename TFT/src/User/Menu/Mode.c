@@ -10,9 +10,6 @@ void Serial_ReSourceDeInit(void)
   memset(&infoHost, 0, sizeof(infoHost));
   resetInfoFile();
   SD_DeInit();
-#ifdef BUZZER_PIN
-  Buzzer_DeConfig();
-#endif
   Serial_DeInit();
 }
 
@@ -21,9 +18,6 @@ void Serial_ReSourceInit(void)
   if (serialHasBeenInitialized) return;
   serialHasBeenInitialized = true;
   
-#ifdef BUZZER_PIN
-  Buzzer_Config();
-#endif
   Serial_Init(infoSettings.baudrate);
   
 #ifdef U_DISK_SUPPROT
@@ -41,7 +35,12 @@ void infoMenuSelect(void)
   {
     case SERIAL_TSC:
     {
-      Serial_ReSourceInit();
+      #ifndef CLEAN_MODE_SWITCHING_SUPPORT
+        Serial_ReSourceInit();
+      #endif
+      #ifdef BUZZER_PIN
+        Buzzer_Config();
+      #endif
       GUI_SetColor(FONT_COLOR);
       GUI_SetBkColor(BACKGROUND_COLOR);
       infoMenu.menu[infoMenu.cur] = menuStatus; //status screen as default screen on boot
@@ -62,8 +61,12 @@ void infoMenuSelect(void)
       
     #ifdef ST7920_SPI
     case LCD12864:
+      #ifdef BUZZER_PIN
+        Buzzer_DeConfig();  // To use the buzzer in LCD12864 Simulations mode! 
+      #endif
+      
       #ifdef LED_color_PIN
-        //LED_Color_PIN_IPN(); //// for what?
+        //LED_Color_PIN_IPN(); //// for what? 
       #endif  
       GUI_SetColor(ST7920_FNCOLOR);
       GUI_SetBkColor(ST7920_BKCOLOR);
@@ -103,6 +106,9 @@ void menuMode(void)
   //RADIO_Create(&modeRadio);
   #ifndef CLEAN_MODE_SWITCHING_SUPPORT  
     Serial_ReSourceDeInit();
+  #endif
+  #ifdef BUZZER_PIN
+    Buzzer_DeConfig();
   #endif
 
   show_selectICON();
