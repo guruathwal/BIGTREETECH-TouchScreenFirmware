@@ -63,7 +63,7 @@ void infoMenuSelect(void)
     #ifdef ST7920_SPI
     case LCD12864:
       #ifdef LED_color_PIN
-        LED_Color_PIN_IPN(); //// for what?
+        //LED_Color_PIN_IPN(); //// for what?
       #endif  
       GUI_SetColor(ST7920_FNCOLOR);
       GUI_SetBkColor(ST7920_BKCOLOR);
