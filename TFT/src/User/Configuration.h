@@ -22,7 +22,7 @@
  *
  * :[2400, 9600, 19200, 38400, 57600, 115200, 250000, 500000, 1000000]
  */
-#define BAUDRATE 250000
+#define BAUDRATE 115200
 
 /**
  * Default LANGUAGE
@@ -31,7 +31,7 @@
  * ENGLISH, CHINESE, RUSSIAN, JAPANESE, ARMENIAN, GERMAN, CZECH, SPAIN, FRENCH, PORTUGUESE, ITALIAN, POLISH, SLOVAK, DUTCH
  * 
  */
-#define DEFAULT_LANGUAGE GERMAN
+#define DEFAULT_LANGUAGE ENGLISH
 
 /**
  * Default LCD Mode
@@ -39,10 +39,11 @@
  * Select the default LCD mode. You can always switch between the modes. 
  * 
  * These are available:
- * ST7920_SPI, SERIAL_TSC
+ * ST7920_SPI // LCD12864 Sumilator
+ * SERIAL_TSC // Default 
  * 
  */
-#define DEFAULT_LCD_MODE ST7920_SPI
+#define DEFAULT_LCD_MODE SERIAL_TSC
 
 // Marlin Mode Background & Font Color Options
 // Current color options from lcd.h: BLACK, BLUE, BROWN, BRRED, CYAN, GBLUE, GRAY, GREEN, MAGENTA, RED, WHITE, YELLOW
@@ -72,7 +73,7 @@
  * Default value is: 1 for LED_OFF
  * 
 */
-#define STARTUP_KNOP_LED_COLOR 3 //LED_RED
+#define STARTUP_KNOP_LED_COLOR 1 //LED_OFF
 
 //===========================================================================
 //============================ TFT Mode Settings ============================
