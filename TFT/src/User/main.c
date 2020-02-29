@@ -23,6 +23,10 @@ void Hardware_GenericInit(void)
   W25Qxx_Init();
   LCD_Init();
   readStoredPara();
+  #ifdef LED_color_PIN
+    LED_Color_PIN_Init(6,5);
+    LED_Color_PIN_SetColor();
+  #endif
   LCD_RefreshDirection();  //refresh display direction after reading settings
   scanUpdates();
   SD_DeInit();
@@ -52,10 +56,6 @@ void Hardware_GenericInit(void)
   }
   GUI_RestoreColorDefault();
   infoMenuSelect();
-
-  #ifdef LED_color_PIN
-    KnopLED_Update();
-  #endif
 }
 
 int main(void)

@@ -155,7 +155,7 @@
 #define	COLOR_BLACK							0x000000	//	纯黑
 
 
-void led_color_Init(uint16_t psc,uint16_t arr); //
-void LED_color_PIN_IPN(void);
+void LED_Color_PIN_Init(uint16_t psc,uint16_t arr); //
+void LED_Color_PIN_IPN(void);
 void ws2812_send_DAT(uint32_t ws2812_dat);
 #endif
