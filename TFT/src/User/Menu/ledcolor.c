@@ -5,7 +5,7 @@
 
 #ifdef LED_color_PIN
 
-void led_color_Init(uint16_t psc,uint16_t arr) // 12 11
+void LED_Color_PIN_Init(uint16_t psc,uint16_t arr) // 12 11
 {
 
     GPIO_InitSet(LED_color_PIN,MGPIO_MODE_OUT_PP,0);
@@ -22,7 +22,7 @@ void led_color_Init(uint16_t psc,uint16_t arr) // 12 11
 	//TIM6->CR1|=1<<0;//使能定时器6  
 }
 
-void LED_color_PIN_IPN(void) 
+void LED_Color_PIN_IPN(void) 
 {
     GPIO_InitSet(LED_color_PIN,MGPIO_MODE_IPN,0);
 }

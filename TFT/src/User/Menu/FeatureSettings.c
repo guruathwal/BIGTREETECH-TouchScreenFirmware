@@ -394,7 +394,7 @@ void menuFeatureSettings(void)
 }
 
 #ifdef LED_color_PIN
-void KnopLED_Update(){
+void LED_Color_PIN_SetColor(){
   updateFeatureSettings(SKEY_KNOB_UPDATE);
 }
 #endif
