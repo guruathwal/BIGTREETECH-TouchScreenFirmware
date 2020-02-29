@@ -13,6 +13,37 @@
  * Current color options from lcd.h: BLACK, BLUE, BROWN, BRRED, CYAN, GBLUE, GRAY, GREEN, MAGENTA, RED, WHITE, YELLOW
  */
 
+/**
+ * This setting determines the communication speed of the printer.
+ *
+ * 250000 works in most cases, but you might try a lower speed if
+ * you commonly experience drop-outs during host printing.
+ * You may try up to 1000000 to speed up SD file transfer.
+ *
+ * :[2400, 9600, 19200, 38400, 57600, 115200, 250000, 500000, 1000000]
+ */
+#define BAUDRATE 250000
+
+/**
+ * Default LANGUAGE
+ *
+ * Select the language to display on the LCD. These languages are available:
+ * ENGLISH, CHINESE, RUSSIAN, JAPANESE, ARMENIAN, GERMAN, CZECH, SPAIN, FRENCH, PORTUGUESE, ITALIAN, POLISH, SLOVAK, DUTCH
+ * 
+ */
+#define DEFAULT_LANGUAGE GERMAN
+
+/**
+ * Default LCD Mode
+ *
+ * Select the default LCD mode. You can always switch between the modes. 
+ * 
+ * These are available:
+ * ST7920_SPI, SERIAL_TSC
+ * 
+ */
+#define DEFAULT_LCD_MODE ST7920_SPI
+
 // Marlin Mode Background & Font Color Options
 // Current color options from lcd.h: BLACK, BLUE, BROWN, BRRED, CYAN, GBLUE, GRAY, GREEN, MAGENTA, RED, WHITE, YELLOW
 #define ST7920_BKCOLOR RED
