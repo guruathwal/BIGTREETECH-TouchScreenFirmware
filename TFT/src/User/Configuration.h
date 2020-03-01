@@ -109,8 +109,8 @@
 #define EXTRUDER_ID      {"E0",   "E1",      "E2",      "E3",      "E4",      "E5"}
 
 #define FAN_MAX_PWM      {255,       255,       255,       255,       255,       255}
-#define FAN_ID           {"FIL",     "Ctrl",    "F2",    "F3",    "F4",    "F5"}
-#define FAN_CMD          {"M106 P0", "M710", "M106 P2", "M106 P3", "M106 P4", "M106 P5" };
+#define FAN_ID           {"F1",     "F2",    "F2",    "F3",    "F4",    "F5"}
+#define FAN_CMD          {"M106 P0", "M106 P1", "M106 P2", "M106 P3", "M106 P4", "M106 P5" };
 
 #define SPEED_ID         {"Sp.", "Fr."}
 
