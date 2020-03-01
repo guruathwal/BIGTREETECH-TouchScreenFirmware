@@ -45,15 +45,28 @@
  */
 #define DEFAULT_LCD_MODE SERIAL_TSC
 
+/**
+ * The duration and frequency for the UI feedback sound.
+ * Set these to 0 to disable audio feedback in the LCD menus.
+ * Only valid for SERIAL_TSC LCD MODE anf if BUZZER_PIN is set or availible.
+ */
+#define LCD_FEEDBACK_FREQUENCY_DURATION_L_US 11   // Default 11
+#define LCD_FEEDBACK_FREQUENCY_H_US          3    // Default 3
+
 // Marlin Mode Background & Font Color Options
 // Current color options from lcd.h: BLACK, BLUE, BROWN, BRRED, CYAN, GBLUE, GRAY, GREEN, MAGENTA, RED, WHITE, YELLOW
 #define ST7920_BKCOLOR BLACK
 #define ST7920_FNCOLOR YELLOW
 
-// Text displayed at the top of the LCD in Marlin Mode.
+/**
+ *  Text displayed at the top of the LCD in Marlin Mode. 
+ */
 //#define ST7920_BANNER_TEXT "LCD12864 Simulator"
 
-// Run Marlin Mode fullscreen. Not recommended for TFT24.
+/**
+ * Run Marlin Mode fullscreen. 
+ * Not recommended for TFT24.
+ */
 //#define ST7920_FULLSCREEN
 
 /**
@@ -62,7 +75,7 @@
  * Gives the ability to connect Octoprint over UART to the TFT UART/serial 
  * expansion port and have it work seamlessly no matter which mode the TFT is in. 
  * Only for TFT24 V1.1, TFT35 V3.0 or TFT28 V3.0
-*/ 
+ */ 
 //#define CLEAN_MODE_SWITCHING_SUPPORT  // Enable CLEAN MODE SWITCHING SUPPORT
 
 /**
@@ -79,10 +92,14 @@
 //============================ TFT Mode Settings ============================
 //===========================================================================
 
-// Show BTT bootscreen when starting up
+/**
+ *  Show BTT bootscreen when starting up
+ */
 #define SHOW_BTT_BOOTSCREEN
 
-// TFT mode color
+/**
+ * TFT mode color
+ */ 
 #define TITLE_BACKGROUND_COLOR      BLACK  // Title background color // 0xD928
 #define BACKGROUND_COLOR            BLACK  // Background color // 0x0A29
 #define FONT_COLOR                  WHITE  // Font foreground color
