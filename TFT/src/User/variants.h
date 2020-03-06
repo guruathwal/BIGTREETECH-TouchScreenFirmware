@@ -250,7 +250,6 @@
 
 #if defined(TFT28_V3_0) || defined(TFT35_V3_0)
   #define LED_color_PIN PC7
-  #define LED_color_NUM 9
 #endif
 
 

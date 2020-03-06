@@ -23,10 +23,6 @@ void Hardware_GenericInit(void)
   W25Qxx_Init();
   LCD_Init();
   readStoredPara();
-  #ifdef LED_color_PIN
-    LED_Color_PIN_Init(6,5);
-    LED_Color_PIN_SetColor();
-  #endif
   LCD_RefreshDirection();  //refresh display direction after reading settings
   scanUpdates();
   SD_DeInit();
@@ -47,6 +43,25 @@ void Hardware_GenericInit(void)
 
 #ifdef FIL_RUNOUT_PIN
   FIL_Runout_Init();
+#endif
+
+#ifdef LED_color_PIN
+  #ifdef STARTUP_KNOB_LED_COLOR
+    #if STARTUP_KNOB_LED_COLOR < 1
+    #error STARTUP_KNOB_LED_COLOR cannot be less than 1
+    #endif
+    
+    #if STARTUP_KNOB_LED_COLOR > 9
+    #error STARTUP_KNOB_LED_COLOR cannot be greater than 9
+    #endif
+  #else
+  #define STARTUP_KNOB_LED_COLOR 1
+  #endif
+  
+  knob_LED_Init();
+  
+#else
+  #define STARTUP_KNOB_LED_COLOR 1
 #endif
 
   if(readStoredPara() == false) // Read settings parameter

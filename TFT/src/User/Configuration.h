@@ -79,14 +79,14 @@
 //#define CLEAN_MODE_SWITCHING_SUPPORT  // Enable CLEAN MODE SWITCHING SUPPORT
 
 /**
- * DEFAULT STARTUP KNOP LED COLOR
+ * DEFAULT STARTUP KNOB LED COLOR
  * Choose one of the following numbers -->  1: LED_OFF,     2: LED_WHITE,   3: LED_RED,
  *                                          4: LED_ORANGE,  5: LED_YELLOW,  6: LED_GREEN,
  *                                          7: LED_BLUE,    8: LED_INDIGO,  9: LED_VIOLET
  * Default value is: 1 for LED_OFF
  * 
 */
-#define STARTUP_KNOP_LED_COLOR 1 //LED_OFF
+#define STARTUP_KNOB_LED_COLOR 1 //LED_OFF
 
 //===========================================================================
 //============================ TFT Mode Settings ============================
@@ -126,7 +126,7 @@
 #define EXTRUDER_ID      {"E0",   "E1",      "E2",      "E3",      "E4",      "E5"}
 
 #define FAN_MAX_PWM      {255,       255,       255,       255,       255,       255}
-#define FAN_ID           {"F1",     "F2",    "F2",    "F3",    "F4",    "F5"}
+#define FAN_ID           {"F0",    "F1",    "F2",    "F3",    "F4",    "F5"}
 #define FAN_CMD          {"M106 P0", "M106 P1", "M106 P2", "M106 P3", "M106 P4", "M106 P5" };
 
 #define SPEED_ID         {"Sp.", "Fr."}

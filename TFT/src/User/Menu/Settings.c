@@ -18,11 +18,7 @@ void infoSettingsReset(void)
   infoSettings.terminalACK = 0;
   infoSettings.invert_yaxis = 0;
   infoSettings.move_speed = 0;
-  #ifdef STARTUP_KNOP_LED_COLOR
-    infoSettings.led_color = (STARTUP_KNOP_LED_COLOR - 1); 
-  #else
-    infoSettings.led_color = LED_OFF; 
-  #endif
+  infoSettings.knob_led_color = (STARTUP_KNOB_LED_COLOR - 1); 
   infoSettings.invert_zaxis = 0;
   infoSettings.send_start_gcode = 1;
   infoSettings.send_end_gcode = 1;
