@@ -104,9 +104,9 @@ void gocdeIconDraw(void)
   scrollFileNameCreate(0);
   Scroll_CreatePara(&titleScroll, (uint8_t* )infoFile.title, &titleRect);
   printIconItems.title.address = (uint8_t* )infoFile.title;
-  GUI_SetBkColor(TITLE_BACKGROUND_COLOR);
+  GUI_SetBkColor(lcd_colors[infoSettings.title_bg_color]);
   GUI_ClearPrect(&titleRect);
-  GUI_SetBkColor(BACKGROUND_COLOR);
+  GUI_SetBkColor(lcd_colors[infoSettings.bg_color]);
 
   //draw folders
   for(i=0;(i + infoFile.cur_page * NUM_PER_PAGE < infoFile.F_num) && (i < NUM_PER_PAGE) ; i++)                  // folder
@@ -153,9 +153,9 @@ void gocdeListDraw(void)
 
   Scroll_CreatePara(&titleScroll, (u8 *)infoFile.title, &titleRect);
   printListItems.title.address = (u8 *)infoFile.title;
-  GUI_SetBkColor(TITLE_BACKGROUND_COLOR);
+  GUI_SetBkColor(lcd_colors[infoSettings.title_bg_color]);
   GUI_ClearRect(0, 0, LCD_WIDTH, TITLE_END_Y);
-  GUI_SetBkColor(BACKGROUND_COLOR);
+  GUI_SetBkColor(lcd_colors[infoSettings.bg_color]);
 
   for (i = 0; (i + infoFile.cur_page * NUM_PER_PAGE < infoFile.F_num) && (i < NUM_PER_PAGE); i++) // folder
   {
@@ -215,7 +215,7 @@ void menuPrintFromSource(void)
 
   u8 update=0;
 
-  GUI_Clear(BACKGROUND_COLOR);
+  GUI_Clear(lcd_colors[infoSettings.bg_color]);
   GUI_DispStringInRect(0, 0, LCD_WIDTH, LCD_HEIGHT, textSelect(LABEL_LOADING));
 
   if (mountFS() == true && scanPrintFiles() == true)
@@ -238,9 +238,9 @@ void menuPrintFromSource(void)
 
   while(infoMenu.menu[infoMenu.cur] == menuPrintFromSource)
   {
-    GUI_SetBkColor(TITLE_BACKGROUND_COLOR);
+    GUI_SetBkColor(lcd_colors[infoSettings.title_bg_color]);
     Scroll_DispString(&titleScroll, LEFT);    //
-    GUI_SetBkColor(BACKGROUND_COLOR);
+    GUI_SetBkColor(lcd_colors[infoSettings.bg_color]);
 
     if(list_mode != true){
       Scroll_DispString(&gcodeScroll, CENTER); //
@@ -367,28 +367,33 @@ MENUITEMS sourceSelItems = {
 LABEL_PRINT,
 // icon                       label
  {{ICON_ONTFT_SD,            LABEL_TFTSD},
- #ifdef ONBOARD_SD_SUPPORT
-  {ICON_ONBOARD_SD,           LABEL_ONBOARDSD},
- #endif
- #ifdef U_DISK_SUPPROT
+ #ifdef U_DISK_SUPPORT
   {ICON_U_DISK,               LABEL_U_DISK},
+  {ICON_ONBOARD_SD,           LABEL_ONBOARDSD},
  #else
+  {ICON_ONBOARD_SD,           LABEL_ONBOARDSD},
   {ICON_BACKGROUND,           LABEL_BACKGROUND},
  #endif
- #ifndef ONBOARD_SD_SUPPORT
-  {ICON_BACKGROUND,           LABEL_BACKGROUND},
- #endif
   {ICON_BACKGROUND,           LABEL_BACKGROUND},
   {ICON_BACKGROUND,           LABEL_BACKGROUND},
   {ICON_BACKGROUND,           LABEL_BACKGROUND},
   {ICON_BACKGROUND,           LABEL_BACKGROUND},
-  {ICON_BACK,                 LABEL_BACK},}
+  {ICON_BACK,                 LABEL_BACK}}
 };
 
 void menuPrint(void)
 {
   KEY_VALUES  key_num = KEY_IDLE;
+  if(infoSettings.onboard_sd_support != 1){
+    #ifdef U_DISK_SUPPORT
+    sourceSelItems.items[2].icon = ICON_BACKGROUND;
+    sourceSelItems.items[2].label.index = LABEL_BACKGROUND;
+    #else
+    sourceSelItems.items[1].icon = ICON_BACKGROUND;
+    sourceSelItems.items[1].label.index = LABEL_BACKGROUND;
+    #endif
 
+  }
   menuDrawPage(&sourceSelItems);
   while(infoMenu.menu[infoMenu.cur] == menuPrint)
   {
@@ -402,26 +407,24 @@ void menuPrint(void)
         infoMenu.menu[++infoMenu.cur] = menuPowerOff;
         goto selectEnd;
 
-      #ifdef ONBOARD_SD_SUPPORT
-      case KEY_ICON_1:
-        list_mode = true; //force list mode in Onboard sd casd
-        infoFile.source = BOARD_SD;
-        infoMenu.menu[++infoMenu.cur] = menuPrintFromSource;   //TODO: fix here,  onboard sd card PLR feature
-        goto selectEnd;
-      #endif
-
-      #ifdef U_DISK_SUPPROT
-        #ifdef ONBOARD_SD_SUPPORT
-          case KEY_ICON_2:
-        #else
+      #ifdef U_DISK_SUPPORT
           case KEY_ICON_1:
-        #endif
-        list_mode = infoSettings.file_listmode; //follow list mode setting in usb disk
-        infoFile.source = TFT_UDISK;
-        infoMenu.menu[++infoMenu.cur] = menuPrintFromSource;
-        infoMenu.menu[++infoMenu.cur] = menuPowerOff;
-        goto selectEnd;
+            list_mode = infoSettings.file_listmode; //follow list mode setting in usb disk
+            infoFile.source = TFT_UDISK;
+            infoMenu.menu[++infoMenu.cur] = menuPrintFromSource;
+            infoMenu.menu[++infoMenu.cur] = menuPowerOff;
+            goto selectEnd;
+          case KEY_ICON_2:
+      #else
+          case KEY_ICON_1:
       #endif
+          if(infoSettings.onboard_sd_support == 1)
+          {
+            list_mode = true; //force list mode in Onboard sd casd
+            infoFile.source = BOARD_SD;
+            infoMenu.menu[++infoMenu.cur] = menuPrintFromSource;   //TODO: fix here,  onboard sd card PLR feature
+            goto selectEnd;
+          }
 
       case KEY_ICON_7:
         infoMenu.cur--;
