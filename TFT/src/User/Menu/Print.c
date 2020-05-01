@@ -306,7 +306,7 @@ void menuPrintFromSource(void)
               int16_t gn;
               char *gnew;
               gn = strlen(infoFile.file[key_num + start - infoFile.F_num]) - 6; // -6 means ".gcode"
-              if(gn < 0) gn = 0; // for extension name ".g", ".gco" file, TODO: improve here in next version 
+              if(gn < 0) gn = 0; // for extension name ".g", ".gco" file, TODO: improve here in next version
               gnew = malloc(gn + 10);
               if (gnew != NULL) {
                 strcpy(gnew, getCurFileSource());
@@ -384,7 +384,7 @@ LABEL_PRINT,
 void menuPrint(void)
 {
   KEY_VALUES  key_num = KEY_IDLE;
-  if(infoSettings.onboard_sd_support != 1){
+  if(infoMachineSettings.onboard_sd_support != 1){
     #ifdef U_DISK_SUPPORT
     sourceSelItems.items[2].icon = ICON_BACKGROUND;
     sourceSelItems.items[2].label.index = LABEL_BACKGROUND;
@@ -418,7 +418,7 @@ void menuPrint(void)
       #else
           case KEY_ICON_1:
       #endif
-          if(infoSettings.onboard_sd_support == 1)
+          if(infoMachineSettings.onboard_sd_support == 1)
           {
             list_mode = true; //force list mode in Onboard sd casd
             infoFile.source = BOARD_SD;

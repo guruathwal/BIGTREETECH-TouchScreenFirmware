@@ -1,6 +1,5 @@
 #include "Settings.h"
 #include "includes.h"
-#include "config_default.h"
 
 
 SETTINGS infoSettings;
@@ -24,19 +23,25 @@ void infoSettingsReset(void)
   infoSettings.baudrate             = BAUDRATE;
   infoSettings.language             = DEFAULT_LANGUAGE;
   infoSettings.mode                 = DEFAULT_LCD_MODE;
+  infoSettings.unified_menu         = UNIFIED_MENU;
   infoSettings.rotate_ui            = 0;
+
   infoSettings.bg_color             = BACKGROUND_COLOR;
   infoSettings.font_color           = FONT_COLOR;
   infoSettings.title_bg_color       = TITLE_BACKGROUND_COLOR;
   infoSettings.reminder_color       = REMINDER_FONT_COLOR;
   infoSettings.sd_reminder_color    = VOLUME_REMINDER_FONT_COLOR;
+  infoSettings.status_xyz_bg_color  = STATUS_XYZ_BG_COLOR;
+  infoSettings.list_border_color    = LISTVIEW_BORDER_COLOR;
+  infoSettings.list_button_color    = LISTVIEW_ICON_COLOR;
+
   infoSettings.silent               = 0;
   infoSettings.terminalACK          = 0;
   infoSettings.move_speed           = 1;
   infoSettings.knob_led_color       = (STARTUP_KNOB_LED_COLOR - 1);
   infoSettings.send_start_gcode     = 0;
   infoSettings.send_end_gcode       = 0;
-  infoSettings.send_cancel_gcode    = 0;
+  infoSettings.send_cancel_gcode    = 1;
   infoSettings.persistent_info      = 1;
   infoSettings.file_listmode        = 1;
 
@@ -51,6 +56,7 @@ void infoSettingsReset(void)
 
   infoSettings.send_start_gcode       = 0;
   infoSettings.send_end_gcode         = 0;
+  infoSettings.send_cancel_gcode      = 1;
   infoSettings.auto_off               = 0;
   infoSettings.ps_active_high         = PS_ON_ACTIVE_HIGH;
   infoSettings.auto_off_temp          = AUTO_SHUT_DOWN_MAXTEMP;
@@ -83,7 +89,7 @@ void infoSettingsReset(void)
 
   for(int i = 0; i < MAX_TOOL_COUNT ;i++)
   {
-    infoSettings.fan_max[i]           = default_max_temp[i];
+    infoSettings.fan_max[i]           = default_max_fanPWM[i];
   }
 
   infoSettings.fan_percentage         = 1;
@@ -115,7 +121,7 @@ void infoSettingsReset(void)
     infoSettings.pause_feedrate[i]    = default_pause_speed[i]; // X, Y, Z, E
   }
 
-  infoSettings.level_edge             = 20;
+  infoSettings.level_edge             = LEVELING_EDGE_DISTANCE;
   infoSettings.level_z_pos            = LEVELING_POINT_Z;
   infoSettings.level_z_raise          = LEVELING_POINT_MOVE_Z;
 
@@ -128,17 +134,18 @@ void infoSettingsReset(void)
 }
 
 void initMachineSetting(void){
-
-  infoMachineSettings.EEPROM                  = 0;
+  // some settings are assumes as active unless reported disabled by marlin
+  infoMachineSettings.EEPROM                  = 1;
   infoMachineSettings.autoReportTemp          = 0;
-  infoMachineSettings.autoLevel               = 0;
-  infoMachineSettings.zProbe                  = 0;
-  infoMachineSettings.levelingData            = 0;
+  infoMachineSettings.autoLevel               = 1;
+  infoMachineSettings.zProbe                  = 1;
+  infoMachineSettings.levelingData            = 1;
   infoMachineSettings.softwarePower           = 0;
   infoMachineSettings.toggleLights            = 0;
   infoMachineSettings.caseLightsBrightness    = 0;
   infoMachineSettings.emergencyParser         = 0;
   infoMachineSettings.promptSupport           = 0;
+  infoMachineSettings.onboard_sd_support      = 1;
   infoMachineSettings.autoReportSDStatus      = 0;
 }
 
@@ -151,6 +158,7 @@ void setupMachine(void){
   if (infoMachineSettings.emergencyParser != 1 && wasRestored == true){
     popupReminder(textSelect(LABEL_WARNING), textSelect(LABEL_EMERGENCYPARSER));
   }
+  printSetUpdateWaiting(M27_WATCH_OTHER_SOURCES);
 }
 
 // Version infomation

@@ -66,7 +66,7 @@
     #define CZ_GRAY                 "Šedá"
     #define CZ_ORANGE               "Oranžová"
     #define CZ_INDIGO               "Indigo"
-    #define CZ_VIOLET               "Violet"
+    #define CZ_VIOLET               "Fialová"
     #define CZ_MAGENTA              "Magenta"
     #define CZ_PURPLE               "Purple"
     #define CZ_LIME                 "Lime"
