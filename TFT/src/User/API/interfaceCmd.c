@@ -36,9 +36,9 @@ static float cmd_float(void)
 }
 
 //check if 'string' start with 'search'
-bool static  startsWith(TCHAR* search, TCHAR* string)
+bool static startsWith(TCHAR *search, TCHAR *string)
 {
-    return (strncmp(search, string, strlen(search)) == 0)?true: false;
+  return (strstr(string, search) - string == cmd_index) ? true : false;
 }
 
 // Store gcode cmd to infoCmd queue, this cmd will be sent by UART in sendQueueCmd(),
@@ -171,7 +171,7 @@ void sendQueueCmd(void)
 
   bool avoid_terminal = false;
   u16  cmd=0;
-
+  cmd_index = 0;
   //check if cmd is from TFT or other host
   bool fromTFT = (infoCmd.queue[infoCmd.index_r].src == SERIAL_PORT);
 
@@ -181,25 +181,17 @@ void sendQueueCmd(void)
     return;
   }
 
-  // remove line number from stored gcode for internal parsing purpose
-  char gcode[CMD_MAX_CHAR];
-  if (infoCmd.queue[infoCmd.index_r].gcode[0] == 'N') {
-    u8 gcodeStart;
-    for(gcodeStart = 0; infoCmd.queue[infoCmd.index_r].gcode[gcodeStart] !=0 && gcodeStart < CMD_MAX_CHAR; gcodeStart++) {
-      if(infoCmd.queue[infoCmd.index_r].gcode[gcodeStart] == ' ') {
-        break;
-      }
-    }
-    strncpy(gcode, &infoCmd.queue[infoCmd.index_r].gcode[gcodeStart + 1], CMD_MAX_CHAR);
-  } else {
-    strncpy(gcode, &infoCmd.queue[infoCmd.index_r].gcode[0], CMD_MAX_CHAR);
+  // Skip line number from stored gcode for internal parsing purpose
+  if (infoCmd.queue[infoCmd.index_r].gcode[0] == 'N')
+  {
+    cmd_index = strcspn(infoCmd.queue[infoCmd.index_r].gcode, " ") + 1;
   }
 
-  switch(gcode[0])
+  switch(infoCmd.queue[infoCmd.index_r].gcode[cmd_index])
   {
     // parse M-codes
     case 'M':
-      cmd=strtol(&gcode[1],NULL,10);
+      cmd = strtol(&infoCmd.queue[infoCmd.index_r].gcode[cmd_index + 1], NULL, 10);
       switch(cmd)
       {
         case 0:
@@ -221,10 +213,10 @@ void sendQueueCmd(void)
         case 20: //M20
           if (!fromTFT)
           {
-            if (startsWith("M20 SD:", gcode) ||startsWith("M20 U:", gcode))   {
-            if(startsWith("M20 SD:", gcode)) infoFile.source = TFT_SD;
+            if (startsWith("M20 SD:", infoCmd.queue[infoCmd.index_r].gcode) ||startsWith("M20 U:", infoCmd.queue[infoCmd.index_r].gcode))   {
+            if(startsWith("M20 SD:", infoCmd.queue[infoCmd.index_r].gcode)) infoFile.source = TFT_SD;
             else infoFile.source = TFT_UDISK;
-            strncpy(infoFile.title, &gcode[4], MAX_PATH_LEN);
+            strncpy(infoFile.title, &infoCmd.queue[infoCmd.index_r].gcode[cmd_index + 4], MAX_PATH_LEN);
             // strip out any checksum that might be in the string
             for (int i = 0; i < MAX_PATH_LEN && infoFile.title[i] !=0 ; i++)
               {
@@ -256,14 +248,14 @@ void sendQueueCmd(void)
         case 23: //M23
           if (!fromTFT)
           {
-            if (startsWith("M23 SD:", gcode) || startsWith("M23 U:", gcode))
+            if (startsWith("M23 SD:", infoCmd.queue[infoCmd.index_r].gcode) || startsWith("M23 U:", infoCmd.queue[infoCmd.index_r].gcode))
             {
-              if(startsWith("M23 SD:", gcode))
+              if(startsWith("M23 SD:", infoCmd.queue[infoCmd.index_r].gcode))
                 infoFile.source = TFT_SD;
               else
                 infoFile.source = TFT_UDISK;
               resetInfoFile();
-              strncpy(infoFile.title, &gcode[4], MAX_PATH_LEN);
+              strncpy(infoFile.title, &infoCmd.queue[infoCmd.index_r].gcode[cmd_index + 4], MAX_PATH_LEN);
               // strip out any checksum that might be in the string
               for (int i = 0; i < MAX_PATH_LEN && infoFile.title[i] !=0 ; i++)
                 {
@@ -374,12 +366,12 @@ void sendQueueCmd(void)
         case 30: //M30
           if (!fromTFT)
           {
-            if (startsWith("M30 SD:", gcode) || startsWith("M30 U:", gcode))
+            if (startsWith("M30 SD:", infoCmd.queue[infoCmd.index_r].gcode) || startsWith("M30 U:", infoCmd.queue[infoCmd.index_r].gcode))
             {
-              if(startsWith("M30 SD:", gcode)) infoFile.source = TFT_SD;
+              if(startsWith("M30 SD:", infoCmd.queue[infoCmd.index_r].gcode)) infoFile.source = TFT_SD;
               else infoFile.source = TFT_UDISK;
               TCHAR filepath[MAX_PATH_LEN];
-              strncpy(filepath, &gcode[4], MAX_PATH_LEN);
+              strncpy(filepath, &infoCmd.queue[infoCmd.index_r].gcode[cmd_index + 4], MAX_PATH_LEN);
               // strip out any checksum that might be in the string
               for (int i = 0; i < MAX_PATH_LEN && filepath[i] !=0 ; i++)
                 {
@@ -409,7 +401,7 @@ void sendQueueCmd(void)
           break;
 
         case 115: //M115 TFT
-          if (!fromTFT && startsWith("M115 TFT", gcode))
+          if (!fromTFT && startsWith("M115 TFT", infoCmd.queue[infoCmd.index_r].gcode))
             {
               char buf[50];
               Serial_Puts(SERIAL_PORT_2, "FIRMWARE_NAME: " FIRMWARE_NAME " SOURCE_CODE_URL:https://github.com/bigtreetech/BIGTREETECH-TouchScreenFirmware\n");
@@ -541,7 +533,7 @@ void sendQueueCmd(void)
         case 117: //M117
           {
             char message[CMD_MAX_CHAR];
-            strncpy(message, &gcode[4], CMD_MAX_CHAR);
+            strncpy(message, &infoCmd.queue[infoCmd.index_r].gcode[cmd_index + 4], CMD_MAX_CHAR);
             // strip out any checksum that might be in the string
             for (int i = 0; i < CMD_MAX_CHAR && message[i] !=0 ; i++)
             {
@@ -637,7 +629,7 @@ void sendQueueCmd(void)
               {
                 uint16_t ms = cmd_value();
                 Buzzer_TurnOn(hz, ms);
-                if (!fromTFT && startsWith("M300 TFT", gcode))
+                if (!fromTFT && startsWith("M300 TFT", infoCmd.queue[infoCmd.index_r].gcode))
                 {
                   purgeLastCmd();
                   return;
@@ -695,7 +687,7 @@ void sendQueueCmd(void)
 
     case 'G':
 
-      cmd=strtol(&gcode[1],NULL,10);
+      cmd=strtol(&infoCmd.queue[infoCmd.index_r].gcode[1],NULL,10);
       switch(cmd)
       {
         case 0: //G0
@@ -753,7 +745,7 @@ void sendQueueCmd(void)
       break; //end parsing G-codes
 
     case 'T':
-      cmd=strtol(&gcode[1], NULL, 10);
+      cmd=strtol(&infoCmd.queue[infoCmd.index_r].gcode[1], NULL, 10);
       heatSetCurrentToolNozzle((TOOL)(cmd + NOZZLE0));
       break;
 
