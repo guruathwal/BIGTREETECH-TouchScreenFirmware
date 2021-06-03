@@ -495,10 +495,6 @@ void sendQueueCmd(void)
               Serial_Puts(SERIAL_PORT_2, buf);
               sprintf(buf, "Cap:EXTRUDER_NUM:%d\n", infoSettings.ext_count);
               Serial_Puts(SERIAL_PORT_2, buf);
-              sprintf(buf, "Cap:FAN_NUM:%d\n", infoSettings.fan_count);
-              Serial_Puts(SERIAL_PORT_2, buf);
-              sprintf(buf, "Cap:FAN_CTRL_NUM:%d\n", infoSettings.ctrl_fan_en ? MAX_CRTL_FAN_COUNT : 0);
-              Serial_Puts(SERIAL_PORT_2, buf);
               Serial_Puts(SERIAL_PORT_2, "ok\n");
               purgeLastCmd(true, avoid_terminal);
               return;
@@ -596,20 +592,6 @@ void sendQueueCmd(void)
             }
           }
           break;
-
-        case 106:  // M106
-        {
-          uint8_t i = cmd_seen('P') ? cmd_value() : 0;
-          if (cmd_seen('S')) fanSetCurSpeed(i, cmd_value());
-          break;
-        }
-
-        case 107:  // M107
-        {
-          uint8_t i = cmd_seen('P') ? cmd_value() : 0;
-          fanSetCurSpeed(i, 0);
-          break;
-        }
 
         case 109: // M109
           if (fromTFT)
@@ -912,20 +894,6 @@ void sendQueueCmd(void)
             break;
         #endif
 
-        #ifdef LOAD_UNLOAD_M701_M702
-          case 701:  // M701 Load filament
-          case 702:  // M702 Unload filament
-            infoHost.wait = true;
-            break;
-        #endif
-
-        case 710:  // M710 Controller Fan
-        {
-          if (cmd_seen('S')) fanSetCurSpeed(MAX_COOLING_FAN_COUNT, cmd_value());
-          if (cmd_seen('I')) fanSetCurSpeed(MAX_COOLING_FAN_COUNT + 1, cmd_value());
-          break;
-        }
-
         case 851:  // M851 Z probe offset
         {
           if (cmd_seen('X')) setParameter(P_PROBE_OFFSET, X_AXIS, cmd_float());
@@ -1003,7 +971,6 @@ void sendQueueCmd(void)
 
         case 28:  // G28
           coordinateSetKnown(true);
-          babystepReset();
           storeCmd("M503 S0\n");
           break;
 

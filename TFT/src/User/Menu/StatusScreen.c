@@ -132,20 +132,6 @@ void drawTemperature(void)
 
   #endif
 
-  //FAN
-  lvIcon.lines[0].text = (uint8_t *)fanID[currentFan];
-
-  if (infoSettings.fan_percentage == 1)
-  {
-    sprintf(tempstr, "%d%%", fanGetCurPercent(currentFan));
-  }
-  else
-  {
-    sprintf(tempstr, "%d", fanGetCurSpeed(currentFan));
-  }
-  lvIcon.lines[1].text = (uint8_t *)tempstr;
-  showLiveInfo(2, &lvIcon, &StatusItems.items[2]);
-
   #ifdef TFT70_V3_0
     //SPEED
     lvIcon.lines[0].text = (uint8_t *)SpeedID[0];
@@ -237,14 +223,7 @@ static inline void toggleTool(void)
     // increment hotend index
     if (infoSettings.hotend_count > 1)
       currentTool = (currentTool + 1) % infoSettings.hotend_count;
-    // increment fan index
-    if ((infoSettings.fan_count + infoSettings.ctrl_fan_en) > 1)
-    {
-      do
-      {
-        currentFan = (currentFan + 1) % MAX_FAN_COUNT;
-      } while (!fanIsValid(currentFan));
-    }
+
     // switch speed/flow
     currentSpeedID = (currentSpeedID + 1) % 2;
     drawTemperature();
@@ -252,7 +231,6 @@ static inline void toggleTool(void)
     // gcode queries must be call after drawTemperature
     coordinateQuery(UPDATE_TOOL_TIME / 1000);
     speedQuery();
-    ctrlFanQuery();
   }
 }
 
@@ -293,9 +271,6 @@ void menuStatus(void)
         infoMenu.menu[++infoMenu.cur] = menuHeat;
         break;
 
-      case KEY_ICON_2:
-        infoMenu.menu[++infoMenu.cur] = menuFan;
-        break;
 
       case KEY_SPEEDMENU:
         SET_SPEEDMENUINDEX(0);

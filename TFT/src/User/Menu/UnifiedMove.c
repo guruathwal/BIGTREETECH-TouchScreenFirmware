@@ -10,22 +10,15 @@ void menuUnifiedMove(void)
     {
       {ICON_HOME,                    LABEL_HOME},
       {ICON_MOVE,                    LABEL_MOVE},
-      {ICON_EXTRUDE,                 LABEL_EXTRUDE},
       {ICON_DISABLE_STEPPERS,        LABEL_DISABLE_STEPPERS},
-      {ICON_BABYSTEP,                LABEL_BABYSTEP},
-      {ICON_MANUAL_LEVEL,            LABEL_LEVELING},
+      {ICON_BACKGROUND,              LABEL_BACKGROUND},
+      {ICON_BACKGROUND,              LABEL_BACKGROUND},
       {ICON_BACKGROUND,              LABEL_BACKGROUND},
       {ICON_BACK,                    LABEL_BACK},
     }
   };
 
   KEY_VALUES key_num = KEY_IDLE;
-
-  if (infoMachineSettings.leveling != BL_DISABLED)
-  {
-    UnifiedMoveItems.items[6].icon = ICON_LEVELING;
-    UnifiedMoveItems.items[6].label.index = LABEL_BED_LEVELING;
-  }
 
   menuDrawPage(&UnifiedMoveItems);
 
@@ -35,7 +28,7 @@ void menuUnifiedMove(void)
     switch (key_num)
     {
       case KEY_ICON_0:
-        infoMenu.menu[++infoMenu.cur] = menuHome;
+        storeCmd("G28\n");
         break;
 
       case KEY_ICON_1:
@@ -43,24 +36,7 @@ void menuUnifiedMove(void)
         break;
 
       case KEY_ICON_2:
-        infoMenu.menu[++infoMenu.cur] = menuExtrude;
-        break;
-
-      case KEY_ICON_3:
         storeCmd("M84\n");
-        break;
-
-      case KEY_ICON_4:
-        infoMenu.menu[++infoMenu.cur] = menuBabystep;
-        break;
-
-      case KEY_ICON_5:
-        infoMenu.menu[++infoMenu.cur] = menuManualLeveling;
-        break;
-
-      case KEY_ICON_6:
-        if (infoMachineSettings.leveling != BL_DISABLED)
-          infoMenu.menu[++infoMenu.cur] = menuBedLeveling;
         break;
 
       case KEY_ICON_7:

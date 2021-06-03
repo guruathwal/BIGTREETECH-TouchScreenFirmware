@@ -17,7 +17,6 @@ const LABEL parameterTypes[PARAMETERS_COUNT] = {
   LABEL_FWRECOVER,
   LABEL_RETRACT_AUTO,
   LABEL_HOTEND_OFFSET,
-  LABEL_ABL,
   LABEL_PROBE_OFFSET,
   LABEL_LIN_ADVANCE,
   LABEL_FILAMENT_SETTING,
@@ -76,10 +75,6 @@ void loadElements(LISTITEM * parameterMainItem, uint16_t index, uint8_t itemPos)
 
         case P_AUTO_RETRACT:
           parameterMainItem->titlelabel = autoRetractDisplayID[elementIndex];
-          break;
-
-        case P_ABL_STATE:
-          parameterMainItem->titlelabel.address = ablStateDisplayID[elementIndex];
           break;
 
         case P_LIN_ADV:

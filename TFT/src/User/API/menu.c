@@ -477,7 +477,7 @@ void menuDrawTitle(const uint8_t *content)
   }
   uint16_t start_y = (TITLE_END_Y - BYTE_HEIGHT) / 2;
   uint16_t start_x = 10;
-  uint16_t end_x = drawTemperatureStatus();
+  uint16_t end_x = LCD_WIDTH - start_x;
   GUI_SetBkColor(infoSettings.title_bg_color);
   if (content)
   {
@@ -671,13 +671,7 @@ KEY_VALUES menuKeyGetValue(void)
       tempkey = (KEY_VALUES)KEY_GetValue(COUNT(rect_of_keySS), rect_of_keySS);
     }
     else if ((infoMenu.menu[infoMenu.cur] == menuHeat) ||
-             (infoMenu.menu[infoMenu.cur] == menuPid) ||
-             (infoMenu.menu[infoMenu.cur] == menuTuneExtruder) ||
-             (infoMenu.menu[infoMenu.cur] == menuFan) ||
-             (infoMenu.menu[infoMenu.cur] == menuExtrude) ||
-             (infoMenu.menu[infoMenu.cur] == menuSpeed) ||
-             (infoMenu.menu[infoMenu.cur] == menuZOffset) ||
-             (infoMenu.menu[infoMenu.cur] == menuMBL))
+             (infoMenu.menu[infoMenu.cur] == menuSpeed))
     {
       tempkey = (KEY_VALUES)KEY_GetValue(COUNT(rect_of_keysIN), rect_of_keysIN);
     }
@@ -807,8 +801,6 @@ void loopBackEnd(void)
   parseRcvGcode();
   // Temperature monitor
   loopCheckHeater();
-  // Fan speed monitor
-  loopFan();
   // Speed & flow monitor
   loopSpeed();
 #ifdef SMART_HOME
@@ -871,8 +863,6 @@ void loopFrontEnd(void)
   loopVolumeReminderClear();
   // Busy Indicator clear
   loopBusySignClear();
-  // Check update temperature status
-  loopTemperatureStatus();
 
 #ifdef FIL_RUNOUT_PIN
   // Loop for filament runout detection

@@ -131,11 +131,6 @@ bool getPrintRunout(void)
 // wait for cool down, in the meantime, you can shut down by force
 void shutdown(void)
 {
-  for (uint8_t i = 0; i < infoSettings.fan_count; i++)
-  {
-    mustStoreCmd(fanCmd[i], 0);
-  }
-
   mustStoreCmd("M81\n");
   popupReminder(DIALOG_TYPE_INFO, LABEL_SHUT_DOWN, LABEL_SHUTTING_DOWN);
 }
@@ -162,11 +157,6 @@ void shutdownStart(void)
 
   LABELCHAR(tempbody, LABEL_WAIT_TEMP_SHUT_DOWN);
   sprintf(tempstr, tempbody, infoSettings.auto_off_temp);
-
-  for (uint8_t i = 0; i < infoSettings.fan_count; i++)
-  {
-    mustStoreCmd(fanCmd[i], infoSettings.fan_max[i]);
-  }
 
   setDialogText(LABEL_SHUT_DOWN, (uint8_t *)tempstr, LABEL_FORCE_SHUT_DOWN, LABEL_CANCEL);
   showDialog(DIALOG_TYPE_INFO, shutdown, NULL, shutdownLoop);
@@ -324,9 +314,6 @@ void printEnd(void)
       f_close(&infoPrinting.file);
       break;
   }
-
-  powerFailedClose();
-  powerFailedDelete();
 
   infoPrinting.cur = infoPrinting.size;  // always update the print progress to 100% even if the print was abaorted
   infoPrinting.printing = infoPrinting.pause = false;
@@ -600,8 +587,6 @@ void loopPrintFromTFT(void)
   if (moveCacheToCmd() == true) return;
 
   if (!infoPrinting.printing || infoFile.source >= BOARD_SD) return;
-
-  powerFailedCache(infoPrinting.file.fptr);
 
   for (; infoPrinting.cur < infoPrinting.size;)
   {

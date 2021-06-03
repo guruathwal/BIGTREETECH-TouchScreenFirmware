@@ -4,34 +4,18 @@
 const MENUITEMS moreItems = {
   // title
   LABEL_MORE,
-  // icon                          label
+  // icon                   label
   {
-    {ICON_HEAT,                    LABEL_HEAT},
-    {ICON_FAN,                     LABEL_FAN},
-    {ICON_EXTRUDE,                 LABEL_EXTRUDE},
-    {ICON_PERCENTAGE,              LABEL_PERCENTAGE},
-    {ICON_FEATURE_SETTINGS,        LABEL_FEATURE_SETTINGS},
-    {ICON_MACHINE_SETTINGS,        LABEL_MACHINE_SETTINGS},
-    #ifdef LOAD_UNLOAD_M701_M702
-      {ICON_EXTRUDE,                 LABEL_LOAD_UNLOAD_SHORT},
-    #else
-      {ICON_GCODE,                   LABEL_TERMINAL},
-    #endif
-    {ICON_BACK,                    LABEL_BACK},
+    {ICON_PERCENTAGE,       LABEL_PERCENTAGE},
+    {ICON_FEATURE_SETTINGS, LABEL_FEATURE_SETTINGS},
+    {ICON_MACHINE_SETTINGS, LABEL_MACHINE_SETTINGS},
+    {ICON_GCODE,            LABEL_TERMINAL},
+    {ICON_BACKGROUND,       LABEL_BACKGROUND},
+    {ICON_BACKGROUND,       LABEL_BACKGROUND},
+    {ICON_BACKGROUND,       LABEL_BACKGROUND},
+    {ICON_BACK,             LABEL_BACK},
   }
 };
-
-void isPauseExtrude(void)
-{
-  if (printPause(true, PAUSE_NORMAL))
-    infoMenu.menu[infoMenu.cur] = menuExtrude;
-}
-
-void isPauseLoadUnload(void)
-{
-  if (printPause(true, PAUSE_NORMAL))
-    infoMenu.menu[infoMenu.cur] = menuLoadUnload;
-}
 
 void menuMore(void)
 {
@@ -45,51 +29,19 @@ void menuMore(void)
     switch (key_num)
     {
       case KEY_ICON_0:
-        infoMenu.menu[++infoMenu.cur] = menuHeat;
-        break;
-
-      case KEY_ICON_1:
-        infoMenu.menu[++infoMenu.cur] = menuFan;
-        break;
-
-      case KEY_ICON_2:
-        if (isPrinting() && !isPaused())  // need paused before extrude
-        {
-          setDialogText(LABEL_WARNING, LABEL_IS_PAUSE, LABEL_CONFIRM, LABEL_CANCEL);
-          showDialog(DIALOG_TYPE_ALERT, isPauseExtrude, NULL, NULL);
-        }
-        else
-        {
-          infoMenu.menu[++infoMenu.cur] = menuExtrude;
-        }
-        break;
-
-      case KEY_ICON_3:
         infoMenu.menu[++infoMenu.cur] = menuSpeed;
         break;
 
-      case KEY_ICON_4:
+      case KEY_ICON_1:
         infoMenu.menu[++infoMenu.cur] = menuFeatureSettings;
         break;
 
-      case KEY_ICON_5:
+      case KEY_ICON_2:
         infoMenu.menu[++infoMenu.cur] = menuMachineSettings;
         break;
 
-      case KEY_ICON_6:
-        #ifdef LOAD_UNLOAD_M701_M702
-          if (isPrinting() && !isPaused())  // need paused before extrude
-          {
-            setDialogText(LABEL_WARNING, LABEL_IS_PAUSE, LABEL_CONFIRM, LABEL_CANCEL);
-            showDialog(DIALOG_TYPE_ALERT, isPauseLoadUnload, NULL, NULL);
-          }
-          else
-          {
-            infoMenu.menu[++infoMenu.cur] = menuLoadUnload;
-          }
-        #else
-          infoMenu.menu[++infoMenu.cur] = menuTerminal;
-        #endif
+      case KEY_ICON_3:
+        infoMenu.menu[++infoMenu.cur] = menuTerminal;
         break;
 
       case KEY_ICON_7:

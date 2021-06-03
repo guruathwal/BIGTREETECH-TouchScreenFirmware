@@ -108,10 +108,6 @@ void menuBeforePrinting(void)
           return;
         }
 
-        if (powerFailedCreate(infoFile.title) == false)
-        {}
-        powerFailedlSeek(&file);
-
         printStart(&file, f_size(&file));
         break;
       }
@@ -151,22 +147,6 @@ static inline void reValueBed(int icon_pos)
   GUI_SetTextMode(GUI_TEXTMODE_NORMAL);
 }
 
-static inline void reDrawFan(int icon_pos)
-{
-  char tempstr[10];
-
-  if (infoSettings.fan_percentage == 1)
-    sprintf(tempstr, "%d%%", fanGetCurPercent(currentFan));
-  else
-    sprintf(tempstr, "%d", fanGetCurSpeed(currentFan));
-
-  GUI_SetTextMode(GUI_TEXTMODE_TRANS);
-  ICON_ReadDisplay(printinfo_points[icon_pos].x, printinfo_points[icon_pos].y, ICON_PRINTING_FAN);
-  GUI_DispString(printinfo_points[icon_pos].x + PICON_TITLE_X, printinfo_points[icon_pos].y + PICON_TITLE_Y,
-                 (uint8_t *)fanID[currentFan]);
-  GUI_DispStringInPrect(&printinfo_val_rect[icon_pos], (uint8_t *)tempstr);
-  GUI_SetTextMode(GUI_TEXTMODE_NORMAL);
-}
 
 static inline void reDrawSpeed(int icon_pos)
 {
@@ -236,17 +216,6 @@ static inline void toggleInfo(void)
       reValueNozzle(EXT_ICON_POS);
     }
 
-    if ((infoSettings.fan_count + infoSettings.ctrl_fan_en) > 1)
-    {
-      do
-      {
-        currentFan = (currentFan + 1) % MAX_FAN_COUNT;
-      } while (!fanIsValid(currentFan));
-
-      RAPID_SERIAL_LOOP();  // perform backend printing loop before drawing to avoid printer idling
-      reDrawFan(FAN_ICON_POS);
-    }
-
     currentSpeedID = (currentSpeedID + 1) % 2;
     RAPID_SERIAL_LOOP();  // perform backend printing loop before drawing to avoid printer idling
     reDrawSpeed(SPD_ICON_POS);
@@ -265,7 +234,6 @@ static inline void printingDrawPage(void)
   updatePrintProgress();
   reValueNozzle(EXT_ICON_POS);
   reValueBed(BED_ICON_POS);
-  reDrawFan(FAN_ICON_POS);
   reDrawProgress(TIM_ICON_POS, 0);
   reDrawLayer(Z_ICON_POS);
   reDrawSpeed(SPD_ICON_POS);
@@ -355,7 +323,6 @@ void menuPrinting(void)
     }
   };
 
-  uint8_t nowFan[MAX_FAN_COUNT] = {0};
   uint8_t oldProgress = 0;
   uint16_t curspeed[2] = {0};
   uint32_t time = 0;
@@ -382,12 +349,9 @@ void menuPrinting(void)
   {
     printingItems.title.address = (uint8_t *)infoPrintSummary.name;
 
-    #ifdef TFT70_V3_0
-      printingItems.items[KEY_ICON_5] = itemIsPrinting[1];  // MainScreen
-    #else
       printingItems.items[KEY_ICON_4] = itemIsPrinting[1];  // MainScreen
       printingItems.items[KEY_ICON_5] = itemIsPrinting[0];  // BackGround
-    #endif
+
       printingItems.items[KEY_ICON_6] = itemIsPrinting[0];  // BackGround
       printingItems.items[KEY_ICON_7] = itemIsPrinting[2];  // Back
   }
@@ -418,14 +382,6 @@ void menuPrinting(void)
       nowHeat.T[BED].target = heatGetTargetTemp(BED);
       RAPID_SERIAL_LOOP();  // perform backend printing loop before drawing to avoid printer idling
       reValueBed(BED_ICON_POS);
-    }
-
-    // check Fan speed change
-    if (nowFan[currentFan] != fanGetCurSpeed(currentFan))
-    {
-      nowFan[currentFan] = fanGetCurSpeed(currentFan);
-      RAPID_SERIAL_LOOP();  // perform backend printing loop before drawing to avoid printer idling
-      reDrawFan(FAN_ICON_POS);
     }
 
     // check printing progress
@@ -507,29 +463,12 @@ void menuPrinting(void)
           else
             addToast(DIALOG_TYPE_ERROR, (char *)textSelect(LABEL_BUSY));
         }
-        #ifndef TFT70_V3_0
-          else
-          {
-            clearInfoPrint();
-            clearInfoFile();
-            infoMenu.cur = 0;
-          }
-        #endif
-        break;
-
-      case KEY_ICON_5:
-        #ifdef TFT70_V3_0
-          if (isPrinting())
-            infoMenu.menu[++infoMenu.cur] = menuBabystep;
-          else
-          {
-            clearInfoPrint();
-            clearInfoFile();
-            infoMenu.cur = 0;
-          }
-        #else
-          infoMenu.menu[++infoMenu.cur] = menuBabystep;
-        #endif
+        else
+        {
+          clearInfoPrint();
+          clearInfoFile();
+          infoMenu.cur = 0;
+        }
         break;
 
       case KEY_ICON_6:

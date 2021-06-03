@@ -548,22 +548,6 @@ void parseACK(void)
         speedSetCurPercent(1, ack_value());
         speedQuerySetWait(false);
       }
-      // parse and store M106, fan speed
-      else if (ack_seen("M106 P"))
-      {
-        uint8_t i = ack_value();
-        if (ack_seen("S"))
-        {
-          fanSetCurSpeed(i, ack_value());
-        }
-      }
-      // parse and store M710, controller fan
-      else if (ack_seen("M710"))
-      {
-        if (ack_seen("S")) fanSetCurSpeed(MAX_COOLING_FAN_COUNT, ack_value());
-        if (ack_seen("I")) fanSetCurSpeed(MAX_COOLING_FAN_COUNT + 1, ack_value());
-        ctrlFanQuerySetWait(false);
-      }
       // parse pause message
       else if (!infoMachineSettings.promptSupport && ack_seen("paused for user"))
       {
@@ -632,7 +616,6 @@ void parseACK(void)
         // Parsing printing data
         // Example: SD printing byte 123/12345
         setPrintProgress(ack_value(), ack_second_value());
-        //powerFailedCache(position);
       }
       else if (infoMachineSettings.onboard_sd_support == ENABLED &&
                infoFile.source >= BOARD_SD &&
@@ -683,20 +666,6 @@ void parseACK(void)
         setDialogText((uint8_t* )"Repeatability Test", (uint8_t *)tmpMsg, LABEL_CONFIRM, LABEL_BACKGROUND);
         showDialog(DIALOG_TYPE_INFO, NULL, NULL, NULL);
       }
-      // parse M48, Standard Deviation
-      else if (ack_seen("Standard Deviation: "))
-      {
-        char tmpMsg[100];
-        strncpy(tmpMsg, (char *)getDialogMsgStr(), 6);
-        tmpMsg[6] = '\0';
-        if (strcmp(tmpMsg, "Mean: ") == 0)
-        {
-          SetLevelCornerPosition(4, ack_value());  // save value for Lever Corner display
-          sprintf(tmpMsg, "%s\nStandard Deviation: %0.5f", (char *)getDialogMsgStr(), ack_value());
-          setDialogText((uint8_t* )"Repeatability Test", (uint8_t *)tmpMsg, LABEL_CONFIRM, LABEL_BACKGROUND);
-          showDialog(DIALOG_TYPE_INFO, NULL, NULL, NULL);
-        }
-      }
       // parse and store M211 or M503, software endstops state (e.g. from Probe Offset, MBL, Mesh Editor menus)
       else if (ack_seen("Soft endstops"))
       {
@@ -705,27 +674,6 @@ void parseACK(void)
 
         if (curValue != infoMachineSettings.softwareEndstops)  // send a notification only if status is changed
           addToast(DIALOG_TYPE_INFO, dmaL2Cache);
-      }
-      // parse M303, PID Autotune finished message
-      else if (ack_seen("PID Autotune finished"))
-      {
-        pidUpdateStatus(true);
-      }
-      // parse M303, PID Autotune failed message
-      else if (ack_seen("PID Autotune failed"))
-      {
-        pidUpdateStatus(false);
-      }
-      // parse M303, PID Autotune finished message in case of Smoothieware
-      else if ((infoMachineSettings.firmwareType == FW_SMOOTHIEWARE) && ack_seen("PID Autotune Complete!"))
-      {
-        //ack_index += 84; -> need length check
-        pidUpdateStatus(true);
-      }
-      // parse M303, PID Autotune failed message in case of Smoothieware
-      else if ((infoMachineSettings.firmwareType == FW_SMOOTHIEWARE) && ack_seen("// WARNING: Autopid did not resolve within"))
-      {
-        pidUpdateStatus(false);
       }
       // parse and store M355, Case light message
       else if (ack_seen("Case light: OFF"))
@@ -739,76 +687,12 @@ void parseACK(void)
         caseLightSetBrightness(ack_value());
         caseLightQuerySetWait(false);
       }
-      // parse and store M420 V1 T1, Mesh data (e.g. from Mesh Editor menu)
-      //
-      // IMPORTANT: It must be placed before the following keys:
-      //            1) echo:Bed Leveling
-      //            2) mesh. Z offset:
-      //
-      else if (meshIsWaitingData())
-      {
-        meshUpdateData(dmaL2Cache);  // update mesh data
-      }
-      // parse and store M420 V1 T1 or M420 Sxx or M503, ABL state (e.g. from Bed Leveling menu)
-      else if (ack_seen("echo:Bed Leveling"))
-      {
-        if (ack_seen("ON"))
-          setParameter(P_ABL_STATE, 0, ENABLED);
-        else
-          setParameter(P_ABL_STATE, 0, DISABLED);
-      }
-      // parse and store M420 V1 T1 or G29 S0 (mesh. Z offset:) or M503 (G29 S4 Zxx), MBL Z offset value (e.g. from Babystep menu)
-      else if (ack_seen("mesh. Z offset:") || ack_seen("G29 S4 Z"))
-      {
-        setParameter(P_MBL_OFFSET, 0, ack_value());
-      }
       // parse and store M851, Probe Z offset value (e.g. from Babystep menu) and X an Y probe Offset for LevelCorner position limit to be fixed see ABL.c
       else if (ack_seen("Probe Offset"))
       {
         if (ack_seen("X")) setParameter(P_PROBE_OFFSET, AXIS_INDEX_X, ack_value());
         if (ack_seen("Y")) setParameter(P_PROBE_OFFSET, AXIS_INDEX_Y, ack_value());
         if (ack_seen("Z:") || (ack_seen("Z"))) setParameter(P_PROBE_OFFSET, AXIS_INDEX_Z, ack_value());
-      }
-      // parse G29 (ABL) + M118, ABL Completed message (ABL, BBL, UBL) (e.g. from ABL menu)
-      else if (ack_seen("ABL Completed"))
-      {
-        ablUpdateStatus(true);
-      }
-      // parse G29 (MBL), MBL Completed message (e.g. from MBL menu)
-      else if (ack_seen("Mesh probing done"))
-      {
-        mblUpdateStatus(true);
-      }
-      // G30 feedback to get the 4 corners Z value returned by Marlin for LevelCorner function
-      else if (ack_seen("Bed X: "))
-      {
-        float valx = ack_value();
-        float valy = 0;
-        if (ack_seen("Y: ")) valy = ack_value();
-        if (ack_seen("Z: "))
-        {
-          uint16_t x_mid = infoSettings.machine_size_min[X_AXIS] +
-                           (infoSettings.machine_size_max[X_AXIS] - infoSettings.machine_size_min[X_AXIS]) / 2;
-          uint16_t y_mid = infoSettings.machine_size_min[Y_AXIS] +
-                           (infoSettings.machine_size_max[Y_AXIS] - infoSettings.machine_size_min[Y_AXIS]) / 2;
-
-          if ((valx < x_mid) && (valy < y_mid))
-          {
-            SetLevelCornerPosition(0, ack_value());
-          }
-          else if ((valx > x_mid) && (valy < y_mid))
-          {
-            SetLevelCornerPosition(1, ack_value());
-          }
-          else if ((valx > x_mid) && (valy > y_mid))
-          {
-            SetLevelCornerPosition(2, ack_value());
-          }
-          else if ((valx < x_mid) && (valy > y_mid))
-          {
-            SetLevelCornerPosition(3, ack_value());
-          }
-        }
       }
 
       //----------------------------------------

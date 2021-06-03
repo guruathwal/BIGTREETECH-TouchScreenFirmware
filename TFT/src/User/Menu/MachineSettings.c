@@ -115,12 +115,12 @@ void menuMachineSettings(void)
       {ICON_GCODE,                   LABEL_TERMINAL},
       {ICON_CUSTOM,                  LABEL_CUSTOM},
       {ICON_RGB_SETTINGS,            LABEL_RGB_SETTINGS},
-      {ICON_TUNING,                  LABEL_TUNING},
       #ifdef QUICK_EEPROM_BUTTON
         {ICON_EEPROM_SAVE,             LABEL_EEPROM_SETTINGS},
       #else
         {ICON_BACKGROUND,              LABEL_BACKGROUND},
       #endif
+      {ICON_BACKGROUND,              LABEL_BACKGROUND},
       {ICON_BACKGROUND,              LABEL_BACKGROUND},
       {ICON_BACK,                    LABEL_BACK},
     }
@@ -130,7 +130,7 @@ void menuMachineSettings(void)
   const ITEM itemCaseLight = {ICON_CASE_LIGHT, LABEL_CASE_LIGHT};
 
   if (infoMachineSettings.caseLightsBrightness == ENABLED)
-    machineSettingsItems.items[KEY_ICON_6] = itemCaseLight;
+    machineSettingsItems.items[KEY_ICON_5] = itemCaseLight;
 
   menuDrawPage(&machineSettingsItems);
 
@@ -155,17 +155,13 @@ void menuMachineSettings(void)
         infoMenu.menu[++infoMenu.cur] = menuLEDColor;
         break;
 
-      case KEY_ICON_4:
-        infoMenu.menu[++infoMenu.cur] = menuTuning;
-        break;
-
       #ifdef QUICK_EEPROM_BUTTON
-        case KEY_ICON_5:
+        case KEY_ICON_4:
           infoMenu.menu[++infoMenu.cur] = menuEepromSettings;
           break;
       #endif
 
-      case KEY_ICON_6:
+      case KEY_ICON_5:
         if (infoMachineSettings.caseLightsBrightness == ENABLED)
           infoMenu.menu[++infoMenu.cur] = menuCaseLight;
         break;

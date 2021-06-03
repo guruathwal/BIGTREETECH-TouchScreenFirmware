@@ -15,7 +15,6 @@ const uint8_t parameterElementCount[PARAMETERS_COUNT] = {
   4,                       // FW retract recover (Additional length, Additional Swap Length, Feedrate, Swap feedrate)
   1,                       // Set auto FW retract
   (AXIS_INDEX_COUNT - 2),  // Hotend Offset (X, Y, Z)
-  2,                       // ABL State & Z Fade
   (AXIS_INDEX_COUNT - 2),  // Probe offset (X, Y, Z)
   2,                       // Linear Advance (E0, E1)
   3,                       // Filament Diameter (Enable, E0, E1)
@@ -38,7 +37,6 @@ const char * const parameterCode[PARAMETERS_COUNT] = {
   "M208",  // FW retract recover
   "M209",  // Set auto FW retract
   "M218",  // Hotend Offset
-  "M420",  // ABL State & Z Fade
   "M851",  // Probe offset
   "M900",  // Linear Advance
   "M200",  // Filament Diameter
@@ -61,7 +59,6 @@ const char * const parameterCmd[PARAMETERS_COUNT][MAX_ELEMENT_COUNT] = {
   {"S%.2f\n",            "W%.2f\n",       "F%.2f\n",       "R%.2f\n",      NULL,         NULL,           NULL,           NULL},           // FW retract recover (Additional length, Additional Swap Length, Feedrate, Swap feedrate)
   {"S%.0f\n",            NULL,            NULL,            NULL,           NULL,         NULL,           NULL,           NULL},           // Set auto FW retract
   {"T1 X%.2f\n",         "T1 Y%.2f\n",    "T1 Z%.2f\n",    NULL,           NULL,         NULL,           NULL,           NULL},           // Hotend Offset (X, Y, Z)
-  {"S%.0f\n",            "Z%.2f\n",       NULL,            NULL,           NULL,         NULL,           NULL,           NULL},           // ABL State & Z Fade
   {"X%.2f\n",            "Y%.2f\n",       "Z%.2f\n",       NULL,           NULL,         NULL,           NULL,           NULL},           // Probe offset (X, Y, Z)
   {"T0 K%.2f\n",         "T1 K%.2f\n",    NULL,            NULL,           NULL,         NULL,           NULL,           NULL},           // Linear Advance (E0, E1)
   {"S%.0f\n",            "S1 T0 D%.2f\n", "S1 T1 D%.2f\n", NULL,           NULL,         NULL,           NULL,           NULL},           // Filament Diameter (Enable, E0, E1)
@@ -84,7 +81,6 @@ const VAL_TYPE parameterValType[PARAMETERS_COUNT][MAX_ELEMENT_COUNT] = {
   {VAL_TYPE_FLOAT,      VAL_TYPE_FLOAT,     VAL_TYPE_INT,        VAL_TYPE_INT},                      // FW retract recover (Additional length, Additional Swap Length, Feedrate, Swap feedrate)
   {VAL_TYPE_INT},                                                                                    // Set auto FW retract
   {VAL_TYPE_NEG_FLOAT,  VAL_TYPE_NEG_FLOAT, VAL_TYPE_NEG_FLOAT},                                     // Hotend Offset (X, Y, Z)
-  {VAL_TYPE_INT,        VAL_TYPE_FLOAT},                                                             // ABL State + Z Fade
   {VAL_TYPE_NEG_FLOAT,  VAL_TYPE_NEG_FLOAT, VAL_TYPE_NEG_FLOAT},                                     // Probe offset (X, Y, Z)
   {VAL_TYPE_FLOAT,      VAL_TYPE_FLOAT},                                                             // Linear Advance (E0, E1)
   {VAL_TYPE_INT,        VAL_TYPE_FLOAT,     VAL_TYPE_FLOAT},                                         // Filament Diameter (Enable, E0, E1)
@@ -225,9 +221,6 @@ float getParameter(PARAMETER_NAME name, uint8_t index)
     case P_HOTEND_OFFSET:
       return infoParameters.HotendOffset[index];
 
-    case P_ABL_STATE:
-      return infoParameters.ABLState[index];
-
     case P_PROBE_OFFSET:
       return infoParameters.ProbeOffset[index];
 
@@ -309,10 +302,6 @@ void setParameter(PARAMETER_NAME name, uint8_t index, float val)
 
     case P_HOTEND_OFFSET:
       infoParameters.HotendOffset[index] = val;
-      break;
-
-    case P_ABL_STATE:
-      infoParameters.ABLState[index] = val;
       break;
 
     case P_PROBE_OFFSET:

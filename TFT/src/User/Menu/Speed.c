@@ -12,7 +12,7 @@ const int16_t itemPercentTypeTitle[SPEED_NUM] = {
   LABEL_PERCENTAGE_FLOW
 };
 
-static uint8_t item_index = 0;
+static uint8_t item_index = 1;
 static uint8_t percentSteps_index = 0;
 
 void setSpeedItemIndex(uint8_t index)
@@ -32,7 +32,7 @@ void menuSpeed(void)
       {ICON_BACKGROUND,              LABEL_BACKGROUND},
       {ICON_BACKGROUND,              LABEL_BACKGROUND},
       {ICON_INC,                     LABEL_INC},
-      {ICON_MOVE,                    LABEL_PERCENTAGE_SPEED},
+      {ICON_BACKGROUND,              LABEL_BACKGROUND},
       {ICON_E_5_PERCENT,             LABEL_5_PERCENT},
       {ICON_NORMAL_SPEED,            LABEL_NORMAL},
       {ICON_BACK,                    LABEL_BACK},
@@ -83,16 +83,6 @@ void menuSpeed(void)
       case KEY_ICON_3:
         if (speedGetSetPercent(item_index) < SPEED_MAX)
           speedSetPercent(item_index, speedGetSetPercent(item_index) + percentSteps[percentSteps_index]);
-        break;
-
-      case KEY_ICON_4:
-        item_index = (item_index + 1) % SPEED_NUM;
-        percentageItems.title.index = itemPercentTypeTitle[item_index];
-        percentageItems.items[key_num] = itemPercentType[item_index];
-
-        menuDrawTitle(textSelect(percentageItems.title.index));
-        menuDrawItem(&percentageItems.items[key_num], key_num);
-        percentageReDraw(item_index, false);
         break;
 
       case KEY_ICON_5:

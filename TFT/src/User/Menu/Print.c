@@ -351,7 +351,6 @@ void menuPrint(void)
         list_mode = infoSettings.file_listmode;  // follow list mode setting in TFT sd card
         infoFile.source = TFT_SD;
         infoMenu.menu[++infoMenu.cur] = menuPrintFromSource;
-        infoMenu.menu[++infoMenu.cur] = menuPowerOff;
         goto selectEnd;
 
       #ifdef U_DISK_SUPPORT
@@ -359,7 +358,6 @@ void menuPrint(void)
           list_mode = infoSettings.file_listmode;  // follow list mode setting in usb disk
           infoFile.source = TFT_UDISK;
           infoMenu.menu[++infoMenu.cur] = menuPrintFromSource;
-          infoMenu.menu[++infoMenu.cur] = menuPowerOff;
           goto selectEnd;
         case KEY_ICON_2:
       #else
@@ -393,6 +391,5 @@ selectEnd:
   if (!infoHost.printing)  // prevent reset if printing from other source
   {
     resetInfoFile();
-    powerFailedSetDriverSource(getCurFileSource());
   }
 }

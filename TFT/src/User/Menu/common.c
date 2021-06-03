@@ -273,60 +273,6 @@ void temperatureReDraw(uint8_t toolIndex, int16_t * temp, bool skipHeader)
   setFontSize(FONT_SIZE_NORMAL);
 }
 
-// Show/draw fan in a standard menu
-void fanReDraw(uint8_t fanIndex, bool skipHeader)
-{
-  char tempstr[20];
-
-  setFontSize(FONT_SIZE_LARGE);
-
-  if (!skipHeader)
-  {
-    sprintf(tempstr, "%-8s", fanID[fanIndex]);
-    setFontSize(FONT_SIZE_NORMAL);
-    GUI_DispString(exhibitRect.x0, exhibitRect.y0, (uint8_t *) tempstr);
-    setFontSize(FONT_SIZE_LARGE);
-
-    if (infoSettings.fan_percentage == 1)
-    {
-      GUI_DispStringCenter((exhibitRect.x0 + exhibitRect.x1) >> 1, exhibitRect.y0, (uint8_t *) " % ");
-    }
-    else
-    {
-      GUI_DispStringCenter((exhibitRect.x0 + exhibitRect.x1) >> 1, exhibitRect.y0, (uint8_t *) "PWM");
-    }
-  }
-
-  if (infoSettings.fan_percentage == 1)
-    sprintf(tempstr, "%4d/%-4d", fanGetCurPercent(fanIndex), fanGetSetPercent(fanIndex));
-  else
-    sprintf(tempstr, "%4d/%-4d", fanGetCurSpeed(fanIndex), fanGetSetSpeed(fanIndex));
-
-  GUI_DispStringInPrect(&exhibitRect, (uint8_t *) tempstr);
-  setFontSize(FONT_SIZE_NORMAL);
-}
-
-// Show/draw extruder in a standard menu
-void extruderReDraw(uint8_t extruderIndex, float extrusion, bool skipHeader)
-{
-  char tempstr[20];
-
-  setFontSize(FONT_SIZE_LARGE);
-
-  if (!skipHeader)
-  {
-    sprintf(tempstr, "%-8s", extruderDisplayID[extruderIndex]);
-    setFontSize(FONT_SIZE_NORMAL);
-    GUI_DispString(exhibitRect.x0, exhibitRect.y0, (uint8_t *) tempstr);
-    setFontSize(FONT_SIZE_LARGE);
-    GUI_DispStringCenter((exhibitRect.x0 + exhibitRect.x1) >> 1, exhibitRect.y0, (uint8_t *) "mm");
-  }
-
-  sprintf(tempstr, "  %.2f  ", extrusion);
-  GUI_DispStringInPrect(&exhibitRect, (uint8_t *) tempstr);
-  setFontSize(FONT_SIZE_NORMAL);
-}
-
 // Show/draw percentage in a standard menu
 void percentageReDraw(uint8_t itemIndex, bool skipHeader)
 {
