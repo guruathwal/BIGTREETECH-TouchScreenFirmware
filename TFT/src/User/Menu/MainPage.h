@@ -6,6 +6,7 @@ extern "C" {
 #endif
 
 void menuMain(void);
+void menuHomePage(void);
 
 #ifdef __cplusplus
 }

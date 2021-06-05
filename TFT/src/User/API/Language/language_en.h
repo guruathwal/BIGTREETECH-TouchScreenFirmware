@@ -111,6 +111,11 @@
     #define STRING_CLEAR                  "Clear"
     #define STRING_DEFAULT                "Default"
 
+    #define STRING_PUMP                   "Pump"
+    #define STRING_PUMP_OFF               "Pump Off"
+    #define STRING_DOSE                   "Dose"
+    #define STRING_FLUSH                  "Flush"
+
     // Action Buttons
     #define STRING_START                  "Start"
     #define STRING_STOP                   "Stop"
@@ -203,6 +208,7 @@
     #define STRING_1_PERCENT              "1%"
     #define STRING_5_PERCENT              "5%"
     #define STRING_10_PERCENT             "10%"
+    #define STRING_100_PERCENT            "100%"
     #define STRING_PERCENT_VALUE          "%d%%"
 
     #define STRING_5_SECONDS              "5 Sec."
@@ -293,8 +299,6 @@
     #define STRING_CLICK_FOR_MORE         "Click for summary"
     #define STRING_EXT_TEMPLOW            "Hotend temperature is below\nminimum temperature (%d℃)."
     #define STRING_HEAT_HOTEND            "Heat hotend to %d℃?"
-    #define STRING_Z_ALIGN                "Z Align"
     #define STRING_MACROS                 "Macros"
-    #define STRING_MESH_VALID             "Mesh Validation"
 
 #endif

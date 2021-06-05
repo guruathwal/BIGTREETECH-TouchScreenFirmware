@@ -86,13 +86,13 @@ void menuHomePage(void)
     LABEL_READY,
     // icon             label
     {
-      {ICON_PRINT,        LABEL_PRINT},
-      {ICON_STATUS_SPEED, LABEL_BACKGROUND},
-      {ICON_STATUS_FLOW,  LABEL_BACKGROUND},
+      {ICON_PAD_PRINT,    LABEL_PRINT},
+      {ICON_PAD_SPEED,    LABEL_PERCENTAGE_SPEED},
+      {ICON_PAD_FLOW,     LABEL_PERCENTAGE_FLOW},
       {ICON_PAD_Z_INC_10, LABEL_Z_INC},
-      {ICON_BACKGROUND,   LABEL_BACKGROUND},
+      {ICON_PAD_PUMP,     LABEL_PUMP},
       {ICON_MOVE,         LABEL_MOVE},
-      {ICON_MAINMENU,     LABEL_MAINMENU},
+      {ICON_PAD_MENU,     LABEL_MAINMENU},
       {ICON_PAD_Z_DEC_10, LABEL_Z_DEC},
     }
   };
@@ -132,13 +132,23 @@ void menuHomePage(void)
         break;
 
       case KEY_ICON_3:
+        mustStoreScript("G91\nG0 Z-10\n");
         break;
 
       case KEY_ICON_4:
-        infoMenu.menu[++infoMenu.cur] = menuSettings;
+        infoMenu.menu[++infoMenu.cur] = menuPump;
+        break;
+
+      case KEY_ICON_5:
+        infoMenu.menu[++infoMenu.cur] = menuMove;
+        break;
+
+      case KEY_ICON_6:
+        infoMenu.menu[++infoMenu.cur] = menuMain;
         break;
 
       case KEY_ICON_7:
+        mustStoreScript("G91\nG0 Z10\n");
         break;
 
       default:

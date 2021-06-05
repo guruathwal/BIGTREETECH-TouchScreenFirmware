@@ -12,7 +12,7 @@ const int16_t itemPercentTypeTitle[SPEED_NUM] = {
   LABEL_PERCENTAGE_FLOW
 };
 
-static uint8_t item_index = 1;
+static uint8_t item_index = 0;
 static uint8_t percentSteps_index = 0;
 
 void setSpeedItemIndex(uint8_t index)
@@ -28,10 +28,10 @@ void menuSpeed(void)
     LABEL_PERCENTAGE_SPEED,
     // icon                          label
     {
-      {ICON_DEC,                     LABEL_DEC},
+      {ICON_DEC,                     LABEL_BACKGROUND},
       {ICON_BACKGROUND,              LABEL_BACKGROUND},
       {ICON_BACKGROUND,              LABEL_BACKGROUND},
-      {ICON_INC,                     LABEL_INC},
+      {ICON_INC,                     LABEL_BACKGROUND},
       {ICON_BACKGROUND,              LABEL_BACKGROUND},
       {ICON_E_5_PERCENT,             LABEL_5_PERCENT},
       {ICON_NORMAL_SPEED,            LABEL_NORMAL},
@@ -65,7 +65,7 @@ void menuSpeed(void)
     {
       case KEY_ICON_0:
         if (speedGetSetPercent(item_index) > SPEED_MIN)
-          speedSetPercent(item_index, speedGetSetPercent(item_index) - percentSteps[percentSteps_index]);
+          speedSetPercent(item_index, speedGetSetPercent(item_index) - (item_index ? flowPercentSteps[percentSteps_index] : percentSteps[percentSteps_index]));
         break;
 
       case KEY_INFOBOX:
@@ -82,12 +82,12 @@ void menuSpeed(void)
 
       case KEY_ICON_3:
         if (speedGetSetPercent(item_index) < SPEED_MAX)
-          speedSetPercent(item_index, speedGetSetPercent(item_index) + percentSteps[percentSteps_index]);
+          speedSetPercent(item_index, speedGetSetPercent(item_index) + (item_index ? flowPercentSteps[percentSteps_index] : percentSteps[percentSteps_index]));
         break;
 
       case KEY_ICON_5:
         percentSteps_index = (percentSteps_index + 1) % ITEM_PERCENT_STEPS_NUM;
-        percentageItems.items[key_num] = itemPercent[percentSteps_index];
+        percentageItems.items[key_num] = item_index ? itemFlowPercent[percentSteps_index] : itemPercent[percentSteps_index];
 
         menuDrawItem(&percentageItems.items[key_num], key_num);
         break;
@@ -105,9 +105,9 @@ void menuSpeed(void)
           if (encoderPosition)
           {
             if (speedGetSetPercent(item_index) < SPEED_MAX && encoderPosition > 0)
-              speedSetPercent(item_index, speedGetSetPercent(item_index) + percentSteps[percentSteps_index]);
+              speedSetPercent(item_index, speedGetSetPercent(item_index) + (item_index ? flowPercentSteps[percentSteps_index] : percentSteps[percentSteps_index]));
             else if (speedGetSetPercent(item_index) > SPEED_MIN && encoderPosition < 0)
-              speedSetPercent(item_index, speedGetSetPercent(item_index) - percentSteps[percentSteps_index]);
+              speedSetPercent(item_index, speedGetSetPercent(item_index) - (item_index ? flowPercentSteps[percentSteps_index] : percentSteps[percentSteps_index]));
             encoderPosition = 0;
           }
         #endif

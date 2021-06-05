@@ -57,6 +57,18 @@ const ITEM itemPercent[ITEM_PERCENT_STEPS_NUM] =
 // List for percent change steps
 const uint8_t percentSteps[ITEM_PERCENT_STEPS_NUM] = {1, 5, 10};
 
+// Icons list for flow percent change steps
+const ITEM itemFlowPercent[ITEM_PERCENT_STEPS_NUM] =
+{
+// icon                          label
+  {ICON_E_1_PERCENT,             LABEL_1_PERCENT},
+  {ICON_E_10_PERCENT,            LABEL_10_PERCENT},
+  {ICON_E_100_PERCENT,           LABEL_100_PERCENT},
+};
+
+// List for percent change steps
+const uint8_t flowPercentSteps[ITEM_PERCENT_STEPS_NUM] = {1, 10, 100};
+
 // Icons list for axis length/distance change steps
 const ITEM itemMoveLen[ITEM_MOVE_LEN_NUM] =
 {

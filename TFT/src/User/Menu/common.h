@@ -40,6 +40,9 @@ extern const ITEM itemSpeed[ITEM_SPEED_NUM];
 extern const ITEM itemPercent[ITEM_PERCENT_STEPS_NUM];
 extern const uint8_t percentSteps[ITEM_PERCENT_STEPS_NUM];
 
+extern const ITEM itemFlowPercent[ITEM_PERCENT_STEPS_NUM];
+extern const uint8_t flowPercentSteps[ITEM_PERCENT_STEPS_NUM];
+
 extern const ITEM itemMoveLen[ITEM_MOVE_LEN_NUM];
 extern const float moveLenSteps[ITEM_MOVE_LEN_NUM];
 

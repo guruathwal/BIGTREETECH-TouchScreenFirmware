@@ -118,6 +118,11 @@ extern "C" {
 #define LANG_KEY_CLEAR                        "label_clear:"
 #define LANG_KEY_DEFAULT                      "label_default:"
 
+#define LANG_KEY_PUMP                         "label_pump:"
+#define LANG_KEY_PUMP_OFF                     "label_pump_off:"
+#define LANG_KEY_DOSE                         "label_dose:"
+#define LANG_KEY_FLUSH                        "label_flush:"
+
 // Action Buttons
 #define LANG_KEY_START                        "label_start:"
 #define LANG_KEY_STOP                         "label_stop:"
@@ -207,6 +212,7 @@ extern "C" {
 #define LANG_KEY_1_PERCENT                    "label_1_percent:"
 #define LANG_KEY_5_PERCENT                    "label_5_percent:"
 #define LANG_KEY_10_PERCENT                   "label_10_percent:"
+#define LANG_KEY_100_PERCENT                  "label_100_percent:"
 #define LANG_KEY_PERCENT_VALUE                "label_percent_value:"
 
 #define LANG_KEY_5_SECONDS                    "label_5_seconds:"
