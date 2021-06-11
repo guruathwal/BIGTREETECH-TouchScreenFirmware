@@ -13,9 +13,12 @@
 ![GitHub Release Date](https://img.shields.io/github/release-date/bigtreetech/bigtreetech-TouchScreenFirmware.svg)
 [![Build Status](https://github.com/bigtreetech/BIGTREETECH-TouchScreenFirmware/workflows/Build%20Test/badge.svg?branch=master)](https://github.com/bigtreetech/bigtreetech-TouchScreenFirmware/actions)
 
-Important information related to BigTreeTech's TFT touchscreen 3D printer controllers
+**Important information**
+<br>
+The firmware in this branch is modified to work specifically with 'PRINT A DRINK' machine developed by Benjamin Greimel. Do not use this with a normal 3d printer.
 
-![TFT35v3 Image with cable](https://user-images.githubusercontent.com/54359396/115433717-25a5e800-a208-11eb-9bd1-8a66b4780cf7.png)
+<br>
+<img src="https://user-images.githubusercontent.com/54359396/115433717-25a5e800-a208-11eb-9bd1-8a66b4780cf7.png" width="600">
 
 <!-- omit in toc -->
 
