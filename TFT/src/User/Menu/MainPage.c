@@ -15,6 +15,7 @@ void menuMain(void)
       {ICON_STOP,       LABEL_EMERGENCYSTOP},
       {ICON_SETTINGS,   LABEL_SETTINGS},
       {ICON_BACKGROUND, LABEL_BACKGROUND},
+      {ICON_BACKGROUND, LABEL_BACKGROUND},
       {ICON_BACK,       LABEL_BACK},
     }
   };
@@ -112,7 +113,7 @@ void menuHomePage(void)
 
   menuDrawPage(&mainPageItems);
 
-  while (infoMenu.menu[infoMenu.cur] == menuMain)
+  while (infoMenu.menu[infoMenu.cur] == menuHomePage)
   {
     key_num = menuKeyGetValue();
     switch (key_num)

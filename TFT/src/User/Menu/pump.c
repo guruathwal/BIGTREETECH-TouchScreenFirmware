@@ -21,7 +21,7 @@ void menuPump(void)
       {ICON_PAD_DOSE20,   LABEL_DOSE},
       {ICON_PAD_DOSE50,   LABEL_DOSE},
       {ICON_BACKGROUND,   LABEL_BACKGROUND},
-      {ICON_PAD_Z_DEC_10, LABEL_BACK},
+      {ICON_BACK,         LABEL_BACK},
     }
   };
 
@@ -29,7 +29,7 @@ void menuPump(void)
 
   menuDrawPage(&pumpItems);
 
-  while (infoMenu.menu[infoMenu.cur] == menuMain)
+  while (infoMenu.menu[infoMenu.cur] == menuPump)
   {
     key_num = menuKeyGetValue();
     switch (key_num)

@@ -48,8 +48,7 @@ void menuSpeed(void)
   lastSpeed = (LASTSPEED) {speedGetCurPercent(item_index), speedGetSetPercent(item_index)};
 
   percentageItems.title.index = itemPercentTypeTitle[item_index];
-  percentageItems.items[KEY_ICON_4] = itemPercentType[item_index];
-  percentageItems.items[KEY_ICON_5] = itemPercent[percentSteps_index];
+  percentageItems.items[KEY_ICON_5] = item_index ? itemFlowPercent[percentSteps_index] : itemPercent[percentSteps_index];
 
   menuDrawPage(&percentageItems);
   percentageReDraw(item_index, false);
