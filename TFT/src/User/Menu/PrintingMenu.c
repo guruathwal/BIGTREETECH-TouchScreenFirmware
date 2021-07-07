@@ -34,7 +34,6 @@ const GUI_RECT ProgressBar = {START_X + 1,                                PICON_
                               START_X + 4 * ICON_WIDTH + 3 * SPACE_X - 1, ICON_START_Y + ICON_HEIGHT + SPACE_Y - PICON_SPACE_Y - 1};
 
 const  char *const Speed_ID[2] = {"Speed", "Flow"};
-bool hasFilamentData;
 
 #define TOGGLE_TIME  2000  // 1 seconds is 1000
 #define LAYER_DELTA  0.1   // minimal layer height change to update the layer display (avoid congestion in vase mode)
@@ -223,9 +222,6 @@ static inline void toggleInfo(void)
 
     if (infoFile.source >= BOARD_SD)
       coordinateQuery(TOGGLE_TIME / 1000);
-
-    if (!hasFilamentData && isPrinting())
-      updatePrintUsedFilament();
   }
 }
 
@@ -244,64 +240,10 @@ static inline void printingDrawPage(void)
   GUI_RestoreColorDefault();
 }
 
-void drawPrintInfo(void)
-{
-  GUI_SetTextMode(GUI_TEXTMODE_TRANS);
-
-  IMAGE_ReadDisplay(rect_of_keySS[17].x0, rect_of_keySS[17].y0, INFOBOX_ADDR);
-  GUI_SetColor(INFOMSG_BKCOLOR);
-  GUI_DispString(rect_of_keySS[17].x0 + STATUS_MSG_ICON_XOFFSET, rect_of_keySS[17].y0 + STATUS_MSG_ICON_YOFFSET,
-                 IconCharSelect(CHARICON_INFO));
-  GUI_DispStringInRectEOL(rect_of_keySS[17].x0 + BYTE_HEIGHT + STATUS_MSG_TITLE_XOFFSET,
-                          rect_of_keySS[17].y0 + STATUS_MSG_ICON_YOFFSET,
-                          rect_of_keySS[17].x1 - BYTE_HEIGHT + STATUS_MSG_TITLE_XOFFSET,
-                          rect_of_keySS[17].y1 - STATUS_MSG_ICON_YOFFSET,
-                          (uint8_t *)textSelect(LABEL_PRINT_FINISHED));
-  GUI_SetColor(INFOMSG_COLOR);
-  GUI_SetBkColor(INFOMSG_BKCOLOR);
-  GUI_DispStringInPrect(&msgRect,LABEL_CLICK_FOR_MORE);
-  GUI_RestoreColorDefault();
-}
-
 void stopConfirm(void)
 {
   printAbort();
   infoMenu.cur--;
-}
-
-void printInfoPopup(void)
-{
-  uint8_t hour = infoPrintSummary.time / 3600;
-  uint8_t min = infoPrintSummary.time % 3600 / 60;
-  uint8_t sec = infoPrintSummary.time % 60;
-  char showInfo[150];
-  char tempstr[30];
-
-  sprintf(showInfo, (char*)textSelect(LABEL_PRINT_TIME), hour, min, sec);
-
-  if (infoPrintSummary.length == 0 && infoPrintSummary.weight == 0 && infoPrintSummary.cost == 0)
-  {
-    strcat(showInfo, (char *)textSelect(LABEL_NO_FILAMENT_STATS));
-  }
-  else
-  {
-    if (infoPrintSummary.length > 0)
-    {
-      sprintf(tempstr, (char *)textSelect(LABEL_FILAMENT_LENGTH), infoPrintSummary.length);
-      strcat(showInfo, tempstr);
-    }
-    if (infoPrintSummary.weight > 0)
-    {
-      sprintf(tempstr, (char *)textSelect(LABEL_FILAMENT_WEIGHT), infoPrintSummary.weight);
-      strcat(showInfo, tempstr);
-    }
-    if (infoPrintSummary.cost > 0)
-    {
-      sprintf(tempstr, (char *)textSelect(LABEL_FILAMENT_COST), infoPrintSummary.cost);
-      strcat(showInfo, tempstr);
-    }
-  }
-  popupReminder(DIALOG_TYPE_INFO, (uint8_t *)infoPrintSummary.name, (uint8_t *)showInfo);
 }
 
 void menuPrinting(void)
@@ -332,34 +274,19 @@ void menuPrinting(void)
   float prevLayer = 0;
   bool layerDrawEnabled = false;
   bool lastPause = isPaused();
-  bool lastPrinting = isPrinting();
 
   memset(&nowHeat, 0, sizeof(HEATER));
 
-  if (lastPrinting == true)
-  {
-    if (infoMachineSettings.long_filename_support == ENABLED && infoFile.source == BOARD_SD)
-      printingItems.title.address = (uint8_t *) infoFile.Longfile[infoFile.fileIndex];
-    else
-      printingItems.title.address = getPrintName(infoFile.title);
-    printingItems.items[KEY_ICON_4] = itemIsPause[lastPause];
-    printingItems.items[KEY_ICON_5].icon = (infoFile.source < BOARD_SD && isPrintModelIcon()) ? ICON_PREVIEW : ICON_BABYSTEP;
-  }
-  else // returned to this menu after a print was done (ex: after a popup)
-  {
-    printingItems.title.address = (uint8_t *)infoPrintSummary.name;
+  if (infoMachineSettings.long_filename_support == ENABLED && infoFile.source == BOARD_SD)
+    printingItems.title.address = (uint8_t *) infoFile.Longfile[infoFile.fileIndex];
+  else
+    printingItems.title.address = getPrintName(infoFile.title);
 
-      printingItems.items[KEY_ICON_4] = itemIsPrinting[1];  // MainScreen
-      printingItems.items[KEY_ICON_5] = itemIsPrinting[0];  // BackGround
-
-      printingItems.items[KEY_ICON_6] = itemIsPrinting[0];  // BackGround
-      printingItems.items[KEY_ICON_7] = itemIsPrinting[2];  // Back
-  }
+  printingItems.items[KEY_ICON_4] = itemIsPause[lastPause];
+  printingItems.items[KEY_ICON_5].icon = (infoFile.source < BOARD_SD && isPrintModelIcon()) ? ICON_PREVIEW : ICON_BABYSTEP;
 
   menuDrawPage(&printingItems);
   printingDrawPage();
-  if (lastPrinting == false)
-    drawPrintInfo();
 
   while (infoMenu.menu[infoMenu.cur] == menuPrinting)
   {
@@ -443,13 +370,6 @@ void menuPrinting(void)
       menuDrawItem(&printingItems.items[KEY_ICON_4], KEY_ICON_4);
     }
 
-    // check if print just started or just finished
-    if (lastPrinting != isPrinting())
-    {
-      lastPrinting = isPrinting();
-      return;  // It will restart this interface if directly return this function without modify the value of infoMenu
-    }
-
     toggleInfo();
 
     KEY_VALUES key_num = menuKeyGetValue();
@@ -486,10 +406,6 @@ void menuPrinting(void)
           clearInfoPrint();
           infoMenu.cur--;
         }
-        break;
-
-      case KEY_INFOBOX:
-        printInfoPopup();
         break;
 
       default:

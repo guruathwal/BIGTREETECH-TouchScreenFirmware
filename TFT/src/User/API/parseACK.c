@@ -559,23 +559,6 @@ void parseACK(void)
       {
         hostActionCommands();
       }
-      // parse and store M118, filament data update
-      else if (ack_seen("filament_data"))
-      {
-        if (ack_seen("L:"))
-        {
-          ack_values_sum(&infoPrintSummary.length);
-        }
-        else if (ack_seen("W:"))
-        {
-          ack_values_sum(&infoPrintSummary.weight);
-        }
-        else if (ack_seen("C:"))
-        {
-          ack_values_sum(&infoPrintSummary.cost);
-        }
-        hasFilamentData = true;
-      }
       else if (infoMachineSettings.onboard_sd_support == ENABLED &&
                ack_seen(infoMachineSettings.firmwareType != FW_REPRAPFW ? "File opened:" : "job.file.fileName"))
       {

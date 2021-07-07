@@ -9,9 +9,6 @@ extern "C" {
 
 void menuBeforePrinting(void);
 void menuPrinting(void);
-void printInfoPopup(void);
-
-extern bool hasFilamentData;
 
 #ifdef __cplusplus
 }

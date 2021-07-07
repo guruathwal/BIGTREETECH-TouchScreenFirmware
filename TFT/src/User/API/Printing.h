@@ -44,8 +44,6 @@ typedef struct
   float cost;
 } PRINT_SUMMARY;
 
-extern PRINT_SUMMARY infoPrintSummary;
-
 void setRunoutAlarmTrue(void);
 void setRunoutAlarmFalse(void);
 bool getRunoutAlarm(void);
@@ -74,12 +72,9 @@ bool getPrintRunout(void);
 //void shutdown(void);
 //void shutdownLoop(void);
 //void shutdownStart(void);  // start auto shutdown after a print successfully completed
-//void initPrintSummary(void);
-//void preparePrintSummary(void);
 //void sendPrintCodes(uint8_t index);
 
 void printSetUpdateWaiting(bool isWaiting);       // called in interfaceCmd.c
-void updatePrintUsedFilament(void);               // called in PrintingMenu.c
 uint8_t * getPrintName(char * path);              // called in PrintingMenu.c
 void clearInfoPrint(void);                        // called in PrintingMenu.c
 

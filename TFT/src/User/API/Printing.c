@@ -15,10 +15,8 @@ typedef struct
 } PRINTING;
 
 PRINTING infoPrinting;
-PRINT_SUMMARY infoPrintSummary = {.name[0] = '\0', 0, 0, 0, 0};
 
 static bool updateM27_waiting = false;
-static float last_E_pos;
 bool filamentRunoutAlarm;
 
 void setRunoutAlarmTrue(void)
@@ -162,30 +160,6 @@ void shutdownStart(void)
   showDialog(DIALOG_TYPE_INFO, shutdown, NULL, shutdownLoop);
 }
 
-void initPrintSummary(void)
-{
-  last_E_pos = ((infoFile.source >= BOARD_SD) ? coordinateGetAxisActual(E_AXIS) : coordinateGetAxisTarget(E_AXIS));
-  infoPrintSummary = (PRINT_SUMMARY){.name[0] = '\0', 0, 0, 0, 0};
-  hasFilamentData = false;
-}
-
-void preparePrintSummary(void)
-{
-  if (infoMachineSettings.long_filename_support == ENABLED && infoFile.source == BOARD_SD)
-    sprintf(infoPrintSummary.name,"%." STRINGIFY(SUMMARY_NAME_LEN) "s", infoFile.Longfile[infoFile.fileIndex]);
-  else
-    sprintf(infoPrintSummary.name,"%." STRINGIFY(SUMMARY_NAME_LEN) "s", getPrintName(infoFile.title));
-
-  infoPrintSummary.time = infoPrinting.time;
-
-  if (speedGetCurPercent(1) != 100)
-  {
-    infoPrintSummary.length = (infoPrintSummary.length * speedGetCurPercent(1)) / 100;  // multiply by flow percentage
-    infoPrintSummary.weight = (infoPrintSummary.weight * speedGetCurPercent(1)) / 100;  // multiply by flow percentage
-    infoPrintSummary.cost   = (infoPrintSummary.cost   * speedGetCurPercent(1)) / 100;  // multiply by flow percentage
-  }
-}
-
 // send print codes [0: start gcode, 1: end gcode 2: cancel gcode]
 void sendPrintCodes(uint8_t index)
 {
@@ -215,19 +189,6 @@ void sendPrintCodes(uint8_t index)
 void printSetUpdateWaiting(bool isWaiting)
 {
   updateM27_waiting = isWaiting;
-}
-
-void updatePrintUsedFilament(void)
-{
-  float E_pos = ((infoFile.source >= BOARD_SD) ? coordinateGetAxisActual(E_AXIS) : coordinateGetAxisTarget(E_AXIS));
-
-  if ((E_pos + MAX_RETRACT_LIMIT) < last_E_pos)  // Check whether E position reset (G92 E0)
-  {
-    last_E_pos = 0;
-  }
-
-  infoPrintSummary.length += (E_pos - last_E_pos) / 1000;
-  last_E_pos = E_pos;
 }
 
 // only return gcode file name except path
@@ -261,7 +222,6 @@ static inline void printRemoteStart(void)
   infoPrinting.printing = true;
 
   request_M27(infoSettings.m27_refresh_time);  // check if there is a print running from onboard SD or remote host (USB)
-  initPrintSummary();  // init print summary
 
   infoMenu.cur = 1;  // Clear menu buffer when printing menu is active by remote
   infoMenu.menu[infoMenu.cur] = menuPrinting;
@@ -295,8 +255,6 @@ void printStart(FIL * file, uint32_t size)
       }
       break;
   }
-
-  initPrintSummary();  // init print summary
 }
 
 void printEnd(void)
@@ -317,7 +275,6 @@ void printEnd(void)
 
   infoPrinting.cur = infoPrinting.size;  // always update the print progress to 100% even if the print was abaorted
   infoPrinting.printing = infoPrinting.pause = false;
-  preparePrintSummary();  // update print summary. infoPrinting are used
 
   if (infoSettings.send_end_gcode == 1)
   {
