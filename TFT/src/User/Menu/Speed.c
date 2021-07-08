@@ -13,11 +13,21 @@ const int16_t itemPercentTypeTitle[SPEED_NUM] = {
 };
 
 static uint8_t item_index = 0;
+static bool showIndexToggle = false;
 static uint8_t percentSteps_index = 0;
 
+// // set to a number greater than 2 to show toggle button in speed menu
 void setSpeedItemIndex(uint8_t index)
 {
-  item_index = index;
+  if (index < 2)
+  {
+    item_index = index;
+    showIndexToggle = false;
+  }
+  else
+  {
+    showIndexToggle = true;
+  }
 }
 
 void menuSpeed(void)
@@ -46,6 +56,9 @@ void menuSpeed(void)
 
   speedSetPercent(item_index, speedGetCurPercent(item_index));
   lastSpeed = (LASTSPEED) {speedGetCurPercent(item_index), speedGetSetPercent(item_index)};
+
+  if (showIndexToggle)
+    percentageItems.items[KEY_ICON_4] = itemPercentType[item_index];
 
   percentageItems.title.index = itemPercentTypeTitle[item_index];
   percentageItems.items[KEY_ICON_5] = item_index ? itemFlowPercent[percentSteps_index] : itemPercent[percentSteps_index];
@@ -82,6 +95,19 @@ void menuSpeed(void)
       case KEY_ICON_3:
         if (speedGetSetPercent(item_index) < SPEED_MAX)
           speedSetPercent(item_index, speedGetSetPercent(item_index) + (item_index ? flowPercentSteps[percentSteps_index] : percentSteps[percentSteps_index]));
+        break;
+
+      case KEY_ICON_4:
+        if (showIndexToggle)
+        {
+          item_index = (item_index + 1) % SPEED_NUM;
+          percentageItems.title.index = itemPercentTypeTitle[item_index];
+          percentageItems.items[key_num] = itemPercentType[item_index];
+
+          menuDrawTitle(textSelect(percentageItems.title.index));
+          menuDrawItem(&percentageItems.items[key_num], key_num);
+          percentageReDraw(item_index, false);
+        }
         break;
 
       case KEY_ICON_5:
