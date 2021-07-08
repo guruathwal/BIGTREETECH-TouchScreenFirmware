@@ -2,14 +2,14 @@
 #include "includes.h"
 
 #ifdef TFT70_V3_0
-#define KEY_SPEEDMENU         KEY_ICON_3
-#define KEY_FLOWMENU          (KEY_SPEEDMENU + 1)
-#define KEY_MAINMENU          (KEY_FLOWMENU + 1)
-#define SET_SPEEDMENUINDEX(x) setSpeedItemIndex(x)
+  #define KEY_SPEEDMENU         KEY_ICON_3
+  #define KEY_FLOWMENU          (KEY_SPEEDMENU + 1)
+  #define KEY_MAINMENU          (KEY_FLOWMENU + 1)
+  #define SET_SPEEDMENUINDEX(x) setSpeedItemIndex(x)
 #else
-#define KEY_SPEEDMENU         KEY_ICON_3
-#define KEY_MAINMENU          (KEY_SPEEDMENU + 1)
-#define SET_SPEEDMENUINDEX(x)
+  #define KEY_SPEEDMENU         KEY_ICON_3
+  #define KEY_MAINMENU          (KEY_SPEEDMENU + 1)
+  #define SET_SPEEDMENUINDEX(x)
 #endif
 
 const MENUITEMS StatusItems = {
