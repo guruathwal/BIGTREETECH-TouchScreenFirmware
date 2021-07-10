@@ -99,7 +99,6 @@
 #include "Terminal.h"
 
 #include "UnifiedMove.h"
-#include "StatusScreen.h"
 
 #include "CaseLight.h"
 #include "LEDColor.h"

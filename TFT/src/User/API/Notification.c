@@ -160,7 +160,7 @@ void addNotification(DIALOG_TYPE style, char *title, char *text, bool ShowDialog
 
   notificationDot();
 
-  statusScreen_setMsg((uint8_t *)title, (uint8_t *)text);
+  //statusScreen_setMsg((uint8_t *)title, (uint8_t *)text);
 }
 
 //Replay a notification
@@ -196,7 +196,7 @@ void clearNotification(void)
     msglist[i].title[0] = 0;
   }
   notificationDot();
-  statusScreen_setReady();
+  //statusScreen_setReady();
 }
 
 //check if pressed on titlebar area

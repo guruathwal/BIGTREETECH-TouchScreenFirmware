@@ -52,7 +52,7 @@ void infoSetMachineType(uint8_t *machine, uint8_t type_len)
     machine_type[i] = machine[i];
   }
   machine_type[i] = 0;
-  statusScreen_setReady();
+  //statusScreen_setReady();
 }
 
 void infoSetAccessPoint(uint8_t *ssid, uint8_t ssid_len)

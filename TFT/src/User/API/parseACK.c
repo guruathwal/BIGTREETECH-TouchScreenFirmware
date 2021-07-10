@@ -242,7 +242,7 @@ void hostActionCommands(void)
 
   if (ack_seen(":notification "))
   {
-    statusScreen_setMsg((uint8_t *)echomagic, (uint8_t *)dmaL2Cache + ack_index);  // always display the notification on status screen
+    //statusScreen_setMsg((uint8_t *)echomagic, (uint8_t *)dmaL2Cache + ack_index);  // always display the notification on status screen
 
     if (infoSettings.notification_m117 == ENABLED)
     {
