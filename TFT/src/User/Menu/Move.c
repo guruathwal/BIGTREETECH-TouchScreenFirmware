@@ -170,7 +170,7 @@ void update_gantry(void)
 void drawXYZ(void)
 {
   char tempstr[20];
-  GUI_SetColor(INFOBOX_ICON_COLOR);
+  GUI_SetColor(DARKGRAY);
 
   sprintf(tempstr, "X:%.2f  ", coordinateGetAxisActual(X_AXIS));
   GUI_DispString(START_X + 1 * SPACE_X + 1 * ICON_WIDTH, (ICON_START_Y - BYTE_HEIGHT) / 2, (uint8_t *)tempstr);
