@@ -18,6 +18,8 @@ PRINTING infoPrinting;
 
 static bool updateM27_waiting = false;
 bool filamentRunoutAlarm;
+bool rePrint = false;
+
 
 void setRunoutAlarmTrue(void)
 {
@@ -528,6 +530,18 @@ void setPrintResume(bool updateHost)
     if (infoPrinting.printing && infoFile.source >= BOARD_SD)
       infoHost.printing = true;
   }
+}
+
+void activateReprint(void)
+{
+  rePrint = true;
+}
+
+bool isReprint(void)
+{
+  bool state = rePrint;
+  rePrint = false;
+  return state;
 }
 
 // get gcode command from sd card

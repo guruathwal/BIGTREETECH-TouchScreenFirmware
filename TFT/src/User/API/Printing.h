@@ -93,6 +93,9 @@ void setPrintAbort(void);
 void setPrintPause(bool updateHost, PAUSE_TYPE pauseType);
 void setPrintResume(bool updateHost);
 
+void activateReprint(void);  // reprint last file
+bool isReprint(void); // check and reset reprint flag
+
 void loopPrintFromTFT(void);   // called in loopBackEnd(). It handles a print from TFT, if any
 void loopPrintFromHost(void);  // called in loopBackEnd(). It handles a print from onboard SD or remote host (e.g. USB), if any
 

@@ -193,6 +193,11 @@ void menuPrintFromSource(void)
     infoMenu.cur--;
   }
 
+  if (isReprint()) // check reprint flag and start printing
+    {
+      startPrint();
+    }
+
   while (infoMenu.menu[infoMenu.cur] == menuPrintFromSource)
   {
     GUI_SetBkColor(infoSettings.title_bg_color);
