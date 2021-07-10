@@ -292,5 +292,6 @@
     #define STRING_EXT_TEMPLOW            "Hotend temperature is below\nminimum temperature (%d℃)."
     #define STRING_HEAT_HOTEND            "Heat hotend to %d℃?"
     #define STRING_MACROS                 "Macros"
+    #define STRING_REPRINT                "Reprint"
 
 #endif

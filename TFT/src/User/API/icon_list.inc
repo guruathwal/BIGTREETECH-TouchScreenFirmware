@@ -118,4 +118,6 @@ X_ICON (PAD_PUMPOFF)
 X_ICON (PAD_SPEED)
 X_ICON (PAD_Z_INC_10)
 X_ICON (PAD_Z_DEC_10)
+X_ICON (PAD_RESTART)
+
 //after changing/adding/removing an icon, change the ICON_FLASH_SIGN in Settings.h

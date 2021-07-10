@@ -47,10 +47,10 @@ const ITEM itemIsPause[2] = {
 
 const ITEM itemPrintFinished[4] = {
   // icon         label
-  {ICON_MAINMENU,   LABEL_MAINMENU},
-  {ICON_PREVIEW,    LABEL_BACKGROUND},
-  {ICON_PRINT,      LABEL_PRINT},
-  {ICON_BACK,       LABEL_BACK},
+  {ICON_MAINMENU,    LABEL_MAINMENU},
+  {ICON_PREVIEW,     LABEL_BACKGROUND},
+  {ICON_PAD_RESTART, LABEL_REPRINT},
+  {ICON_BACK,        LABEL_BACK},
 };
 
 void menuBeforePrinting(void)
