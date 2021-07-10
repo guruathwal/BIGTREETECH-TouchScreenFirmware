@@ -30,12 +30,14 @@ const  char *const Speed_ID[2] = {"Speed", "Flow"};
 #define LAYER_DELTA  0.1   // minimal layer height change to update the layer display (avoid congestion in vase mode)
 
 #define LAYER_TITLE "Layer"
-#define EXT_ICON_POS 0
-#define BED_ICON_POS 1
-#define FAN_ICON_POS 2
-#define TIM_ICON_POS 3
-#define Z_ICON_POS   4
-#define SPD_ICON_POS 5
+//#define EXT_ICON_POS 0
+//#define BED_ICON_POS 1
+//#define FAN_ICON_POS 2
+#define TIM_ICON_POS 0 //3
+//#define Z_ICON_POS   4
+#define SPD_ICON_POS 1 //5
+#define FLW_ICON_POS 2
+#define PBR_RECT_POS 3
 
 const ITEM itemIsPause[2] = {
   // icon       label
@@ -43,12 +45,12 @@ const ITEM itemIsPause[2] = {
   {ICON_RESUME, LABEL_RESUME},
 };
 
-const ITEM itemPrintFinished[3] = {
+const ITEM itemPrintFinished[4] = {
   // icon         label
-  {ICON_MAINMENU, LABEL_MAINMENU},
-  {ICON_PRINT,    LABEL_PRINT},
-  {ICON_PRINT,    LABEL_PRINT},
-  {ICON_BACK,     LABEL_BACK},
+  {ICON_MAINMENU,   LABEL_MAINMENU},
+  {ICON_PREVIEW,    LABEL_BACKGROUND},
+  {ICON_PRINT,      LABEL_PRINT},
+  {ICON_BACK,       LABEL_BACK},
 };
 
 void menuBeforePrinting(void)
@@ -112,47 +114,30 @@ void menuBeforePrinting(void)
   infoMenu.menu[infoMenu.cur] = menuPrinting;
 }
 
-/*
-static inline void reValueNozzle(int icon_pos)
-{
-  char tempstr[10];
-  sprintf(tempstr, "%d/%d", heatGetCurrentTemp(currentTool), heatGetTargetTemp(currentTool));
-
-  GUI_SetTextMode(GUI_TEXTMODE_TRANS);
-  ICON_ReadDisplay(printinfo_points[icon_pos].x, printinfo_points[icon_pos].y, ICON_PRINTING_NOZZLE);
-  GUI_DispString(printinfo_points[icon_pos].x + PICON_TITLE_X, printinfo_points[icon_pos].y + PICON_TITLE_Y,
-                 (uint8_t *)heatDisplayID[currentTool]);
-  GUI_DispStringInPrect(&printinfo_val_rect[icon_pos], (uint8_t *)tempstr);
-  GUI_SetTextMode(GUI_TEXTMODE_NORMAL);
-}
-
-static inline void reValueBed(int icon_pos)
-{
-  char tempstr[10];
-  sprintf(tempstr, "%d/%d", heatGetCurrentTemp(BED), heatGetTargetTemp(BED));
-
-  GUI_SetTextMode(GUI_TEXTMODE_TRANS);
-  ICON_ReadDisplay(printinfo_points[icon_pos].x, printinfo_points[icon_pos].y, ICON_PRINTING_BED);
-  GUI_DispString(printinfo_points[icon_pos].x + PICON_TITLE_X, printinfo_points[icon_pos].y + PICON_TITLE_Y,
-                 (uint8_t *)heatDisplayID[BED]);
-  GUI_DispStringInPrect(&printinfo_val_rect[icon_pos], (uint8_t *)tempstr);
-  GUI_SetTextMode(GUI_TEXTMODE_NORMAL);
-}
-*/
-
 static inline void reDrawSpeed(int icon_pos)
 {
   char tempstr[10];
 
-  if (currentSpeedID == 0)
-    ICON_ReadDisplay(printinfo_points[icon_pos].x, printinfo_points[icon_pos].y, ICON_PRINTING_SPEED);
-  else
-    ICON_ReadDisplay(printinfo_points[icon_pos].x, printinfo_points[icon_pos].y, ICON_PRINTING_FLOW);
+  ICON_ReadDisplay(rect_of_key[icon_pos].x0, rect_of_key[icon_pos].y0, ICON_PRINTING_SPEED);
 
   GUI_SetTextMode(GUI_TEXTMODE_TRANS);
-  sprintf(tempstr, "%d%%", speedGetCurPercent(currentSpeedID));
-  GUI_DispString(printinfo_points[icon_pos].x + PICON_TITLE_X, printinfo_points[icon_pos].y + PICON_TITLE_Y,
-                 (uint8_t *)Speed_ID[currentSpeedID]);
+  sprintf(tempstr, "%d%%", speedGetCurPercent(0));
+  GUI_DispString(rect_of_key[icon_pos].x0 + PICON_TITLE_X, rect_of_key[icon_pos].y0 + PICON_TITLE_Y,
+                 (uint8_t *)Speed_ID[0]);
+  GUI_DispStringInPrect(&printinfo_val_rect[icon_pos], (uint8_t *)tempstr);
+  GUI_SetTextMode(GUI_TEXTMODE_NORMAL);
+}
+
+static inline void reDrawFlow(int icon_pos)
+{
+  char tempstr[10];
+
+  ICON_ReadDisplay(rect_of_key[icon_pos].x0, rect_of_key[icon_pos].y0, ICON_PRINTING_FLOW);
+
+  GUI_SetTextMode(GUI_TEXTMODE_TRANS);
+  sprintf(tempstr, "%d%%", speedGetCurPercent(1));
+  GUI_DispString(rect_of_key[icon_pos].x0 + PICON_TITLE_X, rect_of_key[icon_pos].y0 + PICON_TITLE_Y,
+                 (uint8_t *)Speed_ID[1]);
   GUI_DispStringInPrect(&printinfo_val_rect[icon_pos], (uint8_t *)tempstr);
   GUI_SetTextMode(GUI_TEXTMODE_NORMAL);
 }
@@ -169,71 +154,32 @@ static inline void reDrawProgress(int icon_pos, uint8_t prevProgress)
   sprintf(timeElapsed, "%02u:%02u:%02u", hour, min, sec);
   GUI_SetNumMode(GUI_NUMMODE_ZERO);
   GUI_SetTextMode(GUI_TEXTMODE_TRANS);
-  ICON_ReadDisplay(printinfo_points[icon_pos].x, printinfo_points[icon_pos].y, ICON_PRINTING_TIMER);
-  GUI_DispString(printinfo_points[icon_pos].x + PICON_TITLE_X, printinfo_points[icon_pos].y + PICON_TITLE_Y, (uint8_t *)progress);
+  ICON_ReadDisplay(rect_of_key[icon_pos].x0, rect_of_key[icon_pos].y0, ICON_PRINTING_TIMER);
+  GUI_DispString(rect_of_key[icon_pos].x0 + PICON_TITLE_X, rect_of_key[icon_pos].y0 + PICON_TITLE_Y, (uint8_t *)progress);
   GUI_DispStringInPrect(&printinfo_val_rect[icon_pos], (uint8_t *)timeElapsed);
   GUI_SetNumMode(GUI_NUMMODE_SPACE);
   GUI_SetTextMode(GUI_TEXTMODE_NORMAL);
 
   if (newProgress != prevProgress)
   {
-    uint16_t progStart = ((ProgressBar.x1 - ProgressBar.x0) * prevProgress) / 100;
-    uint16_t progEnd = ((ProgressBar.x1 - ProgressBar.x0) * newProgress) / 100;
-    GUI_FillRectColor(ProgressBar.x0 + progStart, ProgressBar.y0, ProgressBar.x0 + progEnd, ProgressBar.y1, MAT_ORANGE);
+    uint16_t progStart = ((rect_of_key[PBR_RECT_POS].x1 - rect_of_key[PBR_RECT_POS].x0) * prevProgress) / 100;
+    uint16_t progEnd = ((rect_of_key[PBR_RECT_POS].x1 - rect_of_key[PBR_RECT_POS].x0) * newProgress) / 100;
+    GUI_FillRectColor(rect_of_key[PBR_RECT_POS].x0 + progStart, rect_of_key[PBR_RECT_POS].y0,
+                      rect_of_key[PBR_RECT_POS].x0 + progEnd, rect_of_key[PBR_RECT_POS].y1, MAT_ORANGE);
   }
 }
-
-/*
-static inline void reDrawLayer(int icon_pos)
-{
-  char tempstr[10];
-
-  sprintf(tempstr, "%.2fmm", (infoFile.source >= BOARD_SD) ? coordinateGetAxisActual(Z_AXIS) : coordinateGetAxisTarget(Z_AXIS));
-
-  GUI_SetTextMode(GUI_TEXTMODE_TRANS);
-  ICON_ReadDisplay(printinfo_points[icon_pos].x, printinfo_points[icon_pos].y, ICON_PRINTING_ZLAYER);
-  GUI_DispString(printinfo_points[icon_pos].x + PICON_TITLE_X, printinfo_points[icon_pos].y + PICON_TITLE_Y,
-                  (uint8_t *)LAYER_TITLE);
-  GUI_DispStringInPrect(&printinfo_val_rect[icon_pos], (uint8_t *)tempstr);
-  GUI_SetTextMode(GUI_TEXTMODE_NORMAL);
-}
-*/
-
-/*
-static inline void toggleInfo(void)
-{
-  if (nextScreenUpdate(TOGGLE_TIME))
-  {
-    if (infoSettings.hotend_count > 1)
-    {
-      currentTool = (currentTool + 1) % infoSettings.hotend_count;
-      RAPID_SERIAL_LOOP();  // perform backend printing loop before drawing to avoid printer idling
-      reValueNozzle(EXT_ICON_POS);
-    }
-
-    currentSpeedID = (currentSpeedID + 1) % 2;
-    RAPID_SERIAL_LOOP();  // perform backend printing loop before drawing to avoid printer idling
-    reDrawSpeed(SPD_ICON_POS);
-    speedQuery();
-
-    if (infoFile.source >= BOARD_SD)
-      coordinateQuery(TOGGLE_TIME / 1000);
-  }
-}
-*/
 
 static inline void printingDrawPage(void)
 {
   updatePrintProgress();
-  reValueNozzle(EXT_ICON_POS);
-  reValueBed(BED_ICON_POS);
   reDrawProgress(TIM_ICON_POS, 0);
-  reDrawLayer(Z_ICON_POS);
   reDrawSpeed(SPD_ICON_POS);
-  GUI_SetColor(ORANGE);
-  GUI_DrawRect(ProgressBar.x0 - 1, ProgressBar.y0 - 1, ProgressBar.x1 + 1, ProgressBar.y1 + 1);
+  reDrawFlow(SPD_ICON_POS);
+
   GUI_SetColor(DARKGRAY);
-  GUI_FillPrect(&ProgressBar);
+  GUI_FillPrect(&rect_of_key[PBR_RECT_POS]);
+  GUI_SetColor(ORANGE);
+  GUI_DrawPrect(&rect_of_key[PBR_RECT_POS]);
   GUI_RestoreColorDefault();
 }
 
@@ -256,7 +202,7 @@ void menuPrinting(void)
       {ICON_BACKGROUND,              LABEL_BACKGROUND},
       {ICON_BACKGROUND,              LABEL_BACKGROUND},
       {ICON_BACKGROUND,              LABEL_BACKGROUND},
-      {ICON_BACKGROUND,              LABEL_BABYSTEP},
+      {ICON_PERCENTAGE,              LABEL_PERCENTAGE},
       {ICON_MORE,                    LABEL_MORE},
       {ICON_STOP,                    LABEL_STOP},
     }
@@ -266,11 +212,8 @@ void menuPrinting(void)
   uint16_t curspeed[2] = {0};
   uint32_t time = 0;
   HEATER nowHeat;
-  float curLayer = 0;
-  float usedLayer = 0;
-  float prevLayer = 0;
-  bool layerDrawEnabled = false;
   bool lastPause = isPaused();
+  bool lastPrinting = isPrinting();
 
   memset(&nowHeat, 0, sizeof(HEATER));
 
@@ -280,35 +223,15 @@ void menuPrinting(void)
     printingItems.title.address = getPrintName(infoFile.title);
 
   printingItems.items[KEY_ICON_4] = itemIsPause[lastPause];
-  printingItems.items[KEY_ICON_5].icon = (infoFile.source < BOARD_SD && isPrintModelIcon()) ? ICON_PREVIEW : ICON_BABYSTEP;
+
+  if (isPrintModelIcon())
+    printingItems.items[5].icon = ICON_PREVIEW;
 
   menuDrawPage(&printingItems);
   printingDrawPage();
 
   while (infoMenu.menu[infoMenu.cur] == menuPrinting)
   {
-    //Scroll_DispString(&titleScroll, LEFT);  // Scroll display file name will take too many CPU cycles
-    /*
-    // check nozzle temp change
-    if (nowHeat.T[currentTool].current != heatGetCurrentTemp(currentTool) ||
-        nowHeat.T[currentTool].target != heatGetTargetTemp(currentTool))
-    {
-      nowHeat.T[currentTool].current = heatGetCurrentTemp(currentTool);
-      nowHeat.T[currentTool].target = heatGetTargetTemp(currentTool);
-      RAPID_SERIAL_LOOP();  // perform backend printing loop before drawing to avoid printer idling
-      reValueNozzle(EXT_ICON_POS);
-    }
-
-    // check bed temp change
-    if (nowHeat.T[BED].current != heatGetCurrentTemp(BED) || nowHeat.T[BED].target != heatGetTargetTemp(BED))
-    {
-      nowHeat.T[BED].current = heatGetCurrentTemp(BED);
-      nowHeat.T[BED].target = heatGetTargetTemp(BED);
-      RAPID_SERIAL_LOOP();  // perform backend printing loop before drawing to avoid printer idling
-      reValueBed(BED_ICON_POS);
-    }
-    */
-
     // check printing progress
     if (getPrintSize() != 0)
     {
@@ -331,35 +254,20 @@ void menuPrinting(void)
       }
     }
 
-    /*
-    // Z_AXIS coordinate
-    curLayer = ((infoFile.source >= BOARD_SD) ? coordinateGetAxisActual(Z_AXIS) : coordinateGetAxisTarget(Z_AXIS));
-    if (prevLayer != curLayer)
+    // check change in speed
+    if (curspeed[0] != speedGetCurPercent(0))
     {
-      if (ABS(curLayer - usedLayer) >= LAYER_DELTA)
-      {
-        layerDrawEnabled = true;
-      }
-      if (layerDrawEnabled == true)
-      {
-        usedLayer = curLayer;
-        RAPID_SERIAL_LOOP();  // perform backend printing loop before drawing to avoid printer idling
-        reDrawLayer(Z_ICON_POS);
-      }
-      if (ABS(curLayer - prevLayer) < LAYER_DELTA)
-      {
-        layerDrawEnabled = false;
-      }
-      prevLayer = curLayer;
-    }
-    */
-
-    // check change in speed or flow
-    if (curspeed[currentSpeedID] != speedGetCurPercent(currentSpeedID))
-    {
-      curspeed[currentSpeedID] = speedGetCurPercent(currentSpeedID);
+      curspeed[0] = speedGetCurPercent(0);
       RAPID_SERIAL_LOOP();  // perform backend printing loop before drawing to avoid printer idling
       reDrawSpeed(SPD_ICON_POS);
+    }
+
+    // check change in flow
+    if (curspeed[1] != speedGetCurPercent(1))
+    {
+      curspeed[1] = speedGetCurPercent(1);
+      RAPID_SERIAL_LOOP();  // perform backend printing loop before drawing to avoid printer idling
+      reDrawFlow(FLW_ICON_POS);
     }
 
     // check if print is paused
@@ -370,11 +278,37 @@ void menuPrinting(void)
       menuDrawItem(&printingItems.items[KEY_ICON_4], KEY_ICON_4);
     }
 
-    toggleInfo();
+    // change icons after printing finished
+    if(lastPrinting != isPrinting())
+    {
+      lastPrinting = isPrinting();
+      for (uint8_t i = 0; i < 4; i++)
+      {
+        uint8_t iPos = i+4;
+        if (i != 1)
+        {
+          printingItems.items[iPos] = itemPrintFinished[i];
+          menuDrawItem(&printingItems.items[iPos], iPos);
+        }
+      }
+    }
 
     KEY_VALUES key_num = menuKeyGetValue();
     switch (key_num)
     {
+      // speed icon
+      case KEY_ICON_1:
+        setSpeedItemIndex(0);
+        infoMenu.menu[++infoMenu.cur] = menuSpeed;
+        break;
+
+      // flow icon
+      case KEY_ICON_2:
+        setSpeedItemIndex(1);
+        infoMenu.menu[++infoMenu.cur] = menuSpeed;
+        break;
+
+      // pause icon
       case KEY_ICON_4:
         if (isPrinting())
         {
@@ -391,8 +325,33 @@ void menuPrinting(void)
         }
         break;
 
+      // more icon
+      case KEY_ICON_5:
+        if (isPrinting())
+        {
+          clearInfoPrint();
+          infoMenu.cur--;
+        }
+        break;
+
+      // more icon
       case KEY_ICON_6:
-        infoMenu.menu[++infoMenu.cur] = menuMore;
+        if (isPrinting())
+        {
+          infoMenu.menu[++infoMenu.cur] = menuMore;
+        }
+        else
+        {
+          // reprint current file
+          char temp_info[FILE_NUM + 50];
+          sprintf(temp_info, (char *)textSelect(LABEL_START_PRINT),
+                  (uint8_t *)((infoMachineSettings.long_filename_support == ENABLED && infoFile.source == BOARD_SD) ?
+                                  infoFile.Longfile[infoFile.fileIndex] :
+                                  infoFile.file[infoFile.fileIndex]));
+          // confirm file selction
+          setDialogText(LABEL_PRINT, (uint8_t *)temp_info, LABEL_CONFIRM, LABEL_CANCEL);
+          showDialog(DIALOG_TYPE_QUESTION, activateReprint, NULL, NULL);
+        }
         break;
 
       case KEY_ICON_7:

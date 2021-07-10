@@ -57,9 +57,9 @@
 #define PREHEAT_BED_Y     74
 
 // Printing menu
-#define PICON_LG_WIDTH     154
-#define PICON_SM_WIDTH     137
-#define PICON_HEIGHT       50
+#define PICON_LG_WIDTH     140
+#define PICON_SM_WIDTH     140
+#define PICON_HEIGHT       60
 #define PICON_SPACE_X      ((LCD_WIDTH - PICON_LG_WIDTH*2 - PICON_SM_WIDTH - SPACE_X )/2)
 #define PICON_SPACE_Y      (ICON_HEIGHT + SPACE_Y - PICON_HEIGHT*2)/4
 #define PICON_START_Y      ICON_START_Y
