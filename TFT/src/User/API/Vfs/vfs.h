@@ -9,6 +9,12 @@
 #define FILE_NUM     255
 #define MAX_PATH_LEN 1024
 
+ #ifdef U_DISK_SUPPORT
+  #define FS_COUNT 2
+ #else
+  #define FS_COUNT 1
+ #endif
+
 typedef enum
 {
   TFT_SD,

@@ -396,3 +396,13 @@ selectEnd:
     resetInfoFile();
   }
 }
+
+void openSDCardDirect(void)
+{
+  list_mode = infoSettings.file_listmode;  // follow list mode setting in TFT sd card
+  infoFile.source = TFT_SD;
+  infoMenu.menu[++infoMenu.cur] = menuPrintFromSource;
+
+  if (!infoHost.printing)  // prevent reset if printing from other source
+    resetInfoFile();
+}

@@ -7,6 +7,7 @@ extern "C" {
 
 void menuPrintFromSource(void);
 void menuPrint(void);
+void openSDCardDirect(void);
 
 #ifdef __cplusplus
 }

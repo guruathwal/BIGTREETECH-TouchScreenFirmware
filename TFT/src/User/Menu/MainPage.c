@@ -65,9 +65,16 @@ void menuMain(void)
 
       case KEY_ICON_7:
         if (infoSettings.status_screen != 1)
-          infoMenu.menu[++infoMenu.cur] = menuPrint;
+        {
+          if (FS_COUNT == 1 && infoMachineSettings.onboard_sd_support == 0)
+            openSDCardDirect();
+          else
+            infoMenu.menu[++infoMenu.cur] = menuPrint;
+        }
         else
+        {
           infoMenu.cur--;
+        }
         break;
 
       default:
@@ -119,7 +126,10 @@ void menuHomePage(void)
     switch (key_num)
     {
       case KEY_ICON_0:
-        infoMenu.menu[++infoMenu.cur] = menuPrint;
+        if(FS_COUNT == 1 && infoMachineSettings.onboard_sd_support == 0)
+          openSDCardDirect();
+        else
+          infoMenu.menu[++infoMenu.cur] = menuPrint;
         break;
 
       case KEY_ICON_1:
