@@ -167,11 +167,11 @@ void menuPrintFromSource(void)
 
   KEY_VALUES key_num = KEY_IDLE;
   uint8_t update = 1;
+  bool hasReprint = isReprint();
 
   GUI_Clear(infoSettings.bg_color);
   GUI_DispStringInRect(0, 0, LCD_WIDTH, LCD_HEIGHT, LABEL_LOADING);
-
-  if (mountFS() == true && scanPrintFiles() == true)
+  if (mountFS() == true && (scanPrintFiles() == true || hasReprint))
   {
     if (infoMenu.menu[infoMenu.cur] != menuPrintFromSource)  // Menu index be modify when "scanPrintFilesGcodeFs". (echo,error,warning popup windows)
     {
@@ -193,10 +193,10 @@ void menuPrintFromSource(void)
     infoMenu.cur--;
   }
 
-  if (isReprint()) // check reprint flag and start printing
-    {
-      startPrint();
-    }
+  if (hasReprint)  // check reprint flag and start printing
+  {
+    startPrint();
+  }
 
   while (infoMenu.menu[infoMenu.cur] == menuPrintFromSource)
   {

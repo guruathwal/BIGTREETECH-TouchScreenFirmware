@@ -118,11 +118,11 @@ static inline void reDrawSpeed(int icon_pos)
 {
   char tempstr[10];
 
-  ICON_ReadDisplay(rect_of_key[icon_pos].x0, rect_of_key[icon_pos].y0, ICON_PRINTING_SPEED);
+  ICON_ReadDisplay(rect_of_keyPrint[icon_pos].x0, rect_of_keyPrint[icon_pos].y0, ICON_PRINTING_SPEED);
 
   GUI_SetTextMode(GUI_TEXTMODE_TRANS);
   sprintf(tempstr, "%d%%", speedGetCurPercent(0));
-  GUI_DispString(rect_of_key[icon_pos].x0 + PICON_TITLE_X, rect_of_key[icon_pos].y0 + PICON_TITLE_Y,
+  GUI_DispString(rect_of_keyPrint[icon_pos].x0 + PICON_TITLE_X, rect_of_keyPrint[icon_pos].y0 + PICON_TITLE_Y,
                  (uint8_t *)Speed_ID[0]);
   GUI_DispStringInPrect(&printinfo_val_rect[icon_pos], (uint8_t *)tempstr);
   GUI_SetTextMode(GUI_TEXTMODE_NORMAL);
@@ -132,11 +132,11 @@ static inline void reDrawFlow(int icon_pos)
 {
   char tempstr[10];
 
-  ICON_ReadDisplay(rect_of_key[icon_pos].x0, rect_of_key[icon_pos].y0, ICON_PRINTING_FLOW);
+  ICON_ReadDisplay(rect_of_keyPrint[icon_pos].x0, rect_of_keyPrint[icon_pos].y0, ICON_PRINTING_FLOW);
 
   GUI_SetTextMode(GUI_TEXTMODE_TRANS);
   sprintf(tempstr, "%d%%", speedGetCurPercent(1));
-  GUI_DispString(rect_of_key[icon_pos].x0 + PICON_TITLE_X, rect_of_key[icon_pos].y0 + PICON_TITLE_Y,
+  GUI_DispString(rect_of_keyPrint[icon_pos].x0 + PICON_TITLE_X, rect_of_keyPrint[icon_pos].y0 + PICON_TITLE_Y,
                  (uint8_t *)Speed_ID[1]);
   GUI_DispStringInPrect(&printinfo_val_rect[icon_pos], (uint8_t *)tempstr);
   GUI_SetTextMode(GUI_TEXTMODE_NORMAL);
@@ -151,21 +151,21 @@ static inline void reDrawProgress(int icon_pos, uint8_t prevProgress)
 
   getPrintTimeDetail(&hour, &min, &sec);
   sprintf(progress, "%d%%", newProgress);
-  sprintf(timeElapsed, "%02u:%02u:%02u", hour, min, sec);
+  sprintf(timeElapsed, "%02u:%02u", min, sec); // display only minutes and seconds
   GUI_SetNumMode(GUI_NUMMODE_ZERO);
   GUI_SetTextMode(GUI_TEXTMODE_TRANS);
-  ICON_ReadDisplay(rect_of_key[icon_pos].x0, rect_of_key[icon_pos].y0, ICON_PRINTING_TIMER);
-  GUI_DispString(rect_of_key[icon_pos].x0 + PICON_TITLE_X, rect_of_key[icon_pos].y0 + PICON_TITLE_Y, (uint8_t *)progress);
+  ICON_ReadDisplay(rect_of_keyPrint[icon_pos].x0, rect_of_keyPrint[icon_pos].y0, ICON_PRINTING_TIMER);
+  GUI_DispString(rect_of_keyPrint[icon_pos].x0 + PICON_TITLE_X, rect_of_keyPrint[icon_pos].y0 + PICON_TITLE_Y, (uint8_t *)progress);
   GUI_DispStringInPrect(&printinfo_val_rect[icon_pos], (uint8_t *)timeElapsed);
   GUI_SetNumMode(GUI_NUMMODE_SPACE);
   GUI_SetTextMode(GUI_TEXTMODE_NORMAL);
 
   if (newProgress != prevProgress)
   {
-    uint16_t progStart = ((rect_of_key[PBR_RECT_POS].x1 - rect_of_key[PBR_RECT_POS].x0) * prevProgress) / 100;
-    uint16_t progEnd = ((rect_of_key[PBR_RECT_POS].x1 - rect_of_key[PBR_RECT_POS].x0) * newProgress) / 100;
-    GUI_FillRectColor(rect_of_key[PBR_RECT_POS].x0 + progStart, rect_of_key[PBR_RECT_POS].y0,
-                      rect_of_key[PBR_RECT_POS].x0 + progEnd, rect_of_key[PBR_RECT_POS].y1, MAT_ORANGE);
+    uint16_t progStart = ((rect_of_keyPrint[PBR_RECT_POS].x1 - rect_of_keyPrint[PBR_RECT_POS].x0) * prevProgress) / 100;
+    uint16_t progEnd = ((rect_of_keyPrint[PBR_RECT_POS].x1 - rect_of_keyPrint[PBR_RECT_POS].x0) * newProgress) / 100;
+    GUI_FillRectColor(rect_of_keyPrint[PBR_RECT_POS].x0 + progStart, rect_of_keyPrint[PBR_RECT_POS].y0,
+                      rect_of_keyPrint[PBR_RECT_POS].x0 + progEnd, rect_of_keyPrint[PBR_RECT_POS].y1, MAT_ORANGE);
   }
 }
 
@@ -177,9 +177,9 @@ static inline void printingDrawPage(void)
   reDrawFlow(SPD_ICON_POS);
 
   GUI_SetColor(DARKGRAY);
-  GUI_FillPrect(&rect_of_key[PBR_RECT_POS]);
+  GUI_FillPrect(&rect_of_keyPrint[PBR_RECT_POS]);
   GUI_SetColor(ORANGE);
-  GUI_DrawPrect(&rect_of_key[PBR_RECT_POS]);
+  GUI_DrawPrect(&rect_of_keyPrint[PBR_RECT_POS]);
   GUI_RestoreColorDefault();
 }
 
@@ -187,6 +187,22 @@ void stopConfirm(void)
 {
   printAbort();
   infoMenu.cur--;
+}
+
+void refreshPrintingIcons(MENUITEMS * printingItems)
+{
+  if(!isPrinting())
+  {
+    for (uint8_t i = 0; i < 4; i++)
+    {
+      uint8_t iPos = i+4;
+      if (iPos != 5)
+      {
+        printingItems->items[iPos] = itemPrintFinished[i];
+        menuDrawItem(&printingItems->items[iPos], iPos);
+      }
+    }
+  }
 }
 
 void menuPrinting(void)
@@ -202,7 +218,7 @@ void menuPrinting(void)
       {ICON_BACKGROUND,              LABEL_BACKGROUND},
       {ICON_BACKGROUND,              LABEL_BACKGROUND},
       {ICON_BACKGROUND,              LABEL_BACKGROUND},
-      {ICON_PERCENTAGE,              LABEL_PERCENTAGE},
+      {ICON_BACKGROUND,              LABEL_BACKGROUND},
       {ICON_MORE,                    LABEL_MORE},
       {ICON_STOP,                    LABEL_STOP},
     }
@@ -227,6 +243,7 @@ void menuPrinting(void)
   if (isPrintModelIcon())
     printingItems.items[5].icon = ICON_PREVIEW;
 
+  refreshPrintingIcons(&printingItems);
   menuDrawPage(&printingItems);
   printingDrawPage();
 
@@ -282,15 +299,7 @@ void menuPrinting(void)
     if(lastPrinting != isPrinting())
     {
       lastPrinting = isPrinting();
-      for (uint8_t i = 0; i < 4; i++)
-      {
-        uint8_t iPos = i+4;
-        if (i != 1)
-        {
-          printingItems.items[iPos] = itemPrintFinished[i];
-          menuDrawItem(&printingItems.items[iPos], iPos);
-        }
-      }
+      refreshPrintingIcons(&printingItems);
     }
 
     KEY_VALUES key_num = menuKeyGetValue();
@@ -344,10 +353,7 @@ void menuPrinting(void)
         {
           // reprint current file
           char temp_info[FILE_NUM + 50];
-          sprintf(temp_info, (char *)textSelect(LABEL_START_PRINT),
-                  (uint8_t *)((infoMachineSettings.long_filename_support == ENABLED && infoFile.source == BOARD_SD) ?
-                                  infoFile.Longfile[infoFile.fileIndex] :
-                                  infoFile.file[infoFile.fileIndex]));
+          sprintf(temp_info, (char *)textSelect(LABEL_START_PRINT), (uint8_t *)strrchr( infoFile.title, '/') + 1);
           // confirm file selction
           setDialogText(LABEL_PRINT, (uint8_t *)temp_info, LABEL_CONFIRM, LABEL_CANCEL);
           showDialog(DIALOG_TYPE_QUESTION, activateReprint, NULL, NULL);

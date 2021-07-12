@@ -535,6 +535,7 @@ void setPrintResume(bool updateHost)
 void activateReprint(void)
 {
   rePrint = true;
+  infoMenu.cur--;
 }
 
 bool isReprint(void)

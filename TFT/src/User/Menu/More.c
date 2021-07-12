@@ -29,6 +29,7 @@ void menuMore(void)
     switch (key_num)
     {
       case KEY_ICON_0:
+        setSpeedItemIndex(3);
         infoMenu.menu[++infoMenu.cur] = menuSpeed;
         break;
 
