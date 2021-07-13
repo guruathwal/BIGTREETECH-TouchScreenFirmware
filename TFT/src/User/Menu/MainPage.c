@@ -143,7 +143,7 @@ void menuHomePage(void)
         break;
 
       case KEY_ICON_3:
-        mustStoreScript("G91\nG0 Z-10\n");
+        mustStoreScript("G91\nG0 Z10\n");
         break;
 
       case KEY_ICON_4:
@@ -159,7 +159,7 @@ void menuHomePage(void)
         break;
 
       case KEY_ICON_7:
-        mustStoreScript("G91\nG0 Z10\n");
+        mustStoreScript("G91\nG0 Z-10\n");
         break;
 
       default:
