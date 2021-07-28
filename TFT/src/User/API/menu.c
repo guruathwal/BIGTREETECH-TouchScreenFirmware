@@ -767,6 +767,8 @@ void loopBackEnd(void)
   loopDimTimer();
 #endif
 
+  loopScreensaver();
+
   if (infoMachineSettings.caseLightsBrightness == ENABLED)
   {
     loopCaseLight();

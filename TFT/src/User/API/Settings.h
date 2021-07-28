@@ -197,6 +197,7 @@ typedef struct
   uint8_t  lcd_brightness;
   uint8_t  lcd_idle_brightness;
   uint8_t  lcd_idle_timer;
+  uint8_t  screensaver;
 
   // Start, End & Cancel Gcode Commands
   uint8_t  send_start_gcode;

@@ -98,16 +98,19 @@ void menuDialog(void)
   while (infoMenu.menu[infoMenu.cur] == menuDialog)
   {
     uint16_t key_num = KEY_GetValue(buttonNum, cur_btn_rect);
+
     switch (key_num)
     {
       case KEY_POPUP_CONFIRM:
         infoMenu.cur--;
+        blockScreensaver(false);
         if (action_ok != NULL)
           action_ok();
         break;
 
       case KEY_POPUP_CANCEL:
         infoMenu.cur--;
+        blockScreensaver(false);
         if (action_cancel != NULL)
           action_cancel();
         break;
@@ -237,6 +240,11 @@ void loopPopup(void)
   //avoid to nest menuDialog popup type (while a menuNotification popup type can be overridden)
   if (infoMenu.menu[infoMenu.cur] != menuDialog)
   { //handle the user interaction, then reload the previous menu
-    infoMenu.menu[++infoMenu.cur] = menuDialog;
+    blockScreensaver(true);
+
+    if (infoMenu.menu[infoMenu.cur] == menuScreenSaver)
+      infoMenu.menu[infoMenu.cur] = menuDialog;
+    else
+      infoMenu.menu[++infoMenu.cur] = menuDialog;
   }
 }

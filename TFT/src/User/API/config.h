@@ -122,6 +122,7 @@ extern "C" {
 #define CONFIG_BRIGHTNESS             "lcd_brightness:"
 #define CONFIG_BRIGHTNESS_IDLE        "lcd_idle_brightness:"
 #define CONFIG_BRIGHTNESS_IDLE_DELAY  "lcd_idle_delay:"
+#define CONFIG_SCREENSAVER            "screensaver:"
 //-----------------------------Custom Gcode Commands
 #define CONFIG_CUSTOM_LABEL_1         "custom_label_1:"
 #define CONFIG_CUSTOM_LABEL_2         "custom_label_2:"
@@ -174,6 +175,7 @@ extern "C" {
 #define MAX_RETRACT_LIMIT        20  // retract length over this will not be parsed.
 #define MAX_FAN_SPEED           255  // fan speed (PWM) over this will not be parsed.
 #define MAX_NEOPIXEL_PIXELS     200  // neopixel pixels over this will not be parsed.
+#define MAX_SCREENSAVER_TIME    600  // Duration over this will not be parsed.
 
 #define MIN_SIZE_LIMIT        -2000  // machine size less than this will not be parsed.
 #define NAME_MIN_LENGTH           3  // minimum name length

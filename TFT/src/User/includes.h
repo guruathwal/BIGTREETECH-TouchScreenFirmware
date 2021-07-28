@@ -104,6 +104,7 @@
 #include "LEDColor.h"
 
 #include "pump.h"
+#include "ScreenSaver.h"
 
 #define MAX_MENU_DEPTH 10       // max sub menu depth
 typedef void (*FP_MENU)(void);

@@ -976,6 +976,11 @@ void parseConfigKey(uint16_t index)
         break;
     #endif
 
+    case C_INDEX_SCREENSAVER:
+        SET_VALID_INT_VALUE(infoSettings.screensaver, 0, MAX_SCREENSAVER_TIME);
+        break;
+
+
     //----------------------------Custom Gcode Commands
 
     case C_INDEX_CUSTOM_LABEL_1:

@@ -404,6 +404,15 @@
 #define LCD_DIM_CUSTOM_SECONDS (10 * 60)  // Custom value in seconds. This will be used if DEFAULT_LCD_IDLE_TIMER
                                           // is set to 7 (CUSTOM Seconds).
 
+
+/**
+ * Screensaver
+ * A screensaver is displayed when the touch screen is idle for the defined duration.
+ *
+ * Options: value in Seconds (Maximum 600 seconds). Set to 0 to disable screensaver.
+ */
+#define SCCREENSAVER 60  // Default: 60
+
 /**
  * Buzzer Settings
  * The duration and frequency for the UI feedback sound.

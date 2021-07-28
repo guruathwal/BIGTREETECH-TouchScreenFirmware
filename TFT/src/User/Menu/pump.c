@@ -1,11 +1,8 @@
 #include "pump.h"
 #include "includes.h"
 
-
-
 #define SCRIPT_PUMP_ON  "M42 P205 S255\nM42 P125 S255\n"
 #define SCRIPT_PUMP_OFF "M42 P205 S0\nM42 P125 S0\n"
-
 
 void menuPump(void)
 {

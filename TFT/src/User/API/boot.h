@@ -25,6 +25,7 @@ extern "C" {
   #define ICON_MAX_SIZE             0x5000
   #define INFOBOX_MAX_SIZE          0xB000
   #define SMALL_ICON_MAX_SIZE       0x2000
+  #define SCREENSAVER_MAX_SIZE     0x4B000
 #endif
 
 // address in spiflash W25Qxx
@@ -44,7 +45,8 @@ extern "C" {
 #define INFOBOX_ADDR            (ICON_ADDR(ICON_PREVIEW) + ICON_MAX_SIZE)      // total byte size 0xA7F8
 #define SMALL_ICON_START_ADDR   (INFOBOX_ADDR + INFOBOX_MAX_SIZE)
 #define SMALL_ICON_ADDR(num)    ((num) * SMALL_ICON_MAX_SIZE + SMALL_ICON_START_ADDR)
-#define FLASH_USED              (INFOBOX_ADDR + INFOBOX_MAX_SIZE)              // currently small icons are not used
+#define SCREENSAVER_ADDR        (INFOBOX_ADDR + INFOBOX_MAX_SIZE)              // Screensaver bmp
+#define FLASH_USED              (SCREENSAVER_ADDR + SCREENSAVER_MAX_SIZE)      // currently small icons are not used
 
 #define ADMIN_MODE_FILE "admin.txt"
 #define FIRMWARE_NAME STRINGIFY(HARDWARE) "." STRINGIFY(SOFTWARE_VERSION)

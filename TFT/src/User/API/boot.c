@@ -124,7 +124,6 @@ bool updateIcon(void)
 
   GUI_Clear(infoSettings.bg_color);
   GUI_DispString(5, PADDING, (uint8_t *)"Updating Logo");
-  GUI_ClearPrect(&iconUpdateRect);
 
   bmpState = bmpDecode(BMP_ROOT_DIR "/Logo.bmp", LOGO_ADDR);
   if (bmpState == BMP_SUCCESS)
@@ -136,6 +135,21 @@ bool updateIcon(void)
   {
     notfound++;
     dispIconFail((uint8_t *)(BMP_ROOT_DIR "/Logo.bmp"), bmpState);
+  }
+
+  GUI_DispString(5, PADDING, (uint8_t *)"Updating Screensaver");
+  GUI_Clear(infoSettings.bg_color);
+
+  bmpState = bmpDecode(BMP_ROOT_DIR "/Screensaver.bmp", SCREENSAVER_ADDR);
+  if (bmpState == BMP_SUCCESS)
+  {
+    LOGO_ReadDisplay();
+    found++;
+  }
+  else
+  {
+    notfound++;
+    dispIconFail((uint8_t *)(BMP_ROOT_DIR "/Screensaver.bmp"), bmpState);
   }
 
   GUI_Clear(infoSettings.bg_color);
