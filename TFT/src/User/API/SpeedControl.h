@@ -9,7 +9,7 @@ extern "C" {
 #include <stdint.h>
 
 #define SPEED_NUM 2
-#define SPEED_MIN 10
+#define SPEED_MIN 1
 #define SPEED_MAX 999
 
 void speedSetSendWaiting(uint8_t tool, bool isWaiting);
