@@ -837,6 +837,10 @@ void parseConfigKey(uint16_t index)
       infoSettings.z_steppers_alignment = getOnOff();
       break;
 
+    case C_INDEX_MACHINE_LED_ENABLE:
+      infoSettings.machineLED_en = getOnOff();
+      break;
+
     case C_INDEX_PREHEAT_NAME_1:
     case C_INDEX_PREHEAT_NAME_2:
     case C_INDEX_PREHEAT_NAME_3:
