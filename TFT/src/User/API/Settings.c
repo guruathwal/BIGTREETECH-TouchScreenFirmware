@@ -93,7 +93,7 @@ void infoSettingsReset(void)
   infoSettings.z_steppers_alignment   = DISABLED;
 
   infoSettings.machineLED_en          = DISABLED;
-  memcpy(infoSettings.machineLED, default_machineLED, sizeof(infoSettings.machineLED));
+  memcpy(infoSettings.machineLED, default_machineLED, sizeof(LED_VECT));
 
 // Power Supply Settings
   infoSettings.auto_off               = DISABLED;

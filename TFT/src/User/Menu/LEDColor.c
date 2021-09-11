@@ -576,6 +576,8 @@ void menuLEDColor(void)
 
   // save settings only if value changes
   if (memcmp(origLedValue, infoSettings.machineLED, LED_VECT_SIZE) != 0 || LEDValueChanged == true)
-    storePara();
-
+    {
+      LEDValueChanged = false;
+      storePara();
+    }
 }

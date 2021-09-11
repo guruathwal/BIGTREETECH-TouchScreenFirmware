@@ -15,7 +15,7 @@ void loopScreensaver(void)
 {
   if (infoSettings.screensaver == 0 || screensaverBlocked ||
        isPrinting() || infoHost.printing == true ||
-      infoMenu.menu[infoMenu.cur] != menuScreenSaver)
+      infoMenu.menu[infoMenu.cur] == menuScreenSaver)
   {
     screensaverTimer = OS_GetTimeMs();
     return;
