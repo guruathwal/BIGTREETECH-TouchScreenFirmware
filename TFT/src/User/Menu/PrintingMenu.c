@@ -165,7 +165,7 @@ static inline void reDrawProgress(int icon_pos, uint8_t prevProgress)
     uint16_t progStart = ((rect_of_keyPrint[PBR_RECT_POS].x1 - rect_of_keyPrint[PBR_RECT_POS].x0) * prevProgress) / 100;
     uint16_t progEnd = ((rect_of_keyPrint[PBR_RECT_POS].x1 - rect_of_keyPrint[PBR_RECT_POS].x0) * newProgress) / 100;
     GUI_FillRectColor(rect_of_keyPrint[PBR_RECT_POS].x0 + progStart, rect_of_keyPrint[PBR_RECT_POS].y0,
-                      rect_of_keyPrint[PBR_RECT_POS].x0 + progEnd, rect_of_keyPrint[PBR_RECT_POS].y1, MAT_ORANGE);
+                      rect_of_keyPrint[PBR_RECT_POS].x0 + progEnd, rect_of_keyPrint[PBR_RECT_POS].y1, GRAY);
   }
 }
 
