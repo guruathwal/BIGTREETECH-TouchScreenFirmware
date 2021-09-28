@@ -16,7 +16,6 @@ const uint16_t default_pause_speed[]   = {NOZZLE_PAUSE_XY_FEEDRATE, NOZZLE_PAUSE
 const uint16_t default_preheat_ext[]   = PREHEAT_HOTEND;
 const uint16_t default_preheat_bed[]   = PREHEAT_BED;
 const uint8_t default_custom_enabled[] = CUSTOM_GCODE_ENABLED;
-const LED_VECT default_machineLED      = {0x00, 0x00, 0x00, 0x00, 0x00, 0xFF};
 
 // Reset settings data
 void infoSettingsReset(void)
@@ -91,9 +90,6 @@ void infoSettingsReset(void)
   infoSettings.xy_offset_probing      = ENABLED;
   infoSettings.z_raise_probing        = PROBING_Z_RAISE;
   infoSettings.z_steppers_alignment   = DISABLED;
-
-  infoSettings.machineLED_en          = DISABLED;
-  memcpy(infoSettings.machineLED, default_machineLED, sizeof(LED_VECT));
 
 // Power Supply Settings
   infoSettings.auto_off               = DISABLED;
@@ -246,9 +242,6 @@ void setupMachine(void)
   {
     mustStoreCmd("M555 P2\n");  //  Set RRF compatibility behaves similar to 2: Marlin
   }
-
-  if (infoSettings.machineLED_en == 1)
-    restoreLEDValues();
 }
 
 float flashUsedPercentage(void)

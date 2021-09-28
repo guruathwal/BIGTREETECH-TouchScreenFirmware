@@ -85,7 +85,6 @@ extern "C" {
 #define CONFIG_XY_OFFSET_PROBING      "xy_offset_probing:"
 #define CONFIG_Z_RAISE_PROBING        "z_raise_probing:"
 #define CONFIG_Z_STEPPERS_ALIGNMENT   "z_steppers_alignment:"
-#define CONFIG_MACHINE_LED_ENABLE     "machineLED_en:"
 #define CONFIG_PREHEAT_NAME_1         "preheat_name1:"
 #define CONFIG_PREHEAT_NAME_2         "preheat_name2:"
 #define CONFIG_PREHEAT_NAME_3         "preheat_name3:"

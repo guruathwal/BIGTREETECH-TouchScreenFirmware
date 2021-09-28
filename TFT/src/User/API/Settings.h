@@ -9,7 +9,6 @@ extern "C" {
 #include <stdint.h>
 #include "variants.h"
 #include "coordinate.h"
-#include "LEDColor.h"
 
 enum
 {
@@ -164,13 +163,8 @@ typedef struct
   uint8_t  z_steppers_alignment;
 
   uint16_t level_feedrate[FEEDRATE_COUNT - 1];  // XY, Z
-
-  uint8_t  machineLED_en;
-  LED_VECT machineLED;
-
   uint16_t preheat_temp[PREHEAT_COUNT];
   uint16_t preheat_bed[PREHEAT_COUNT];
-
 
   // Power Supply Settings
   uint8_t  auto_off;
