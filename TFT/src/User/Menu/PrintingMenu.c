@@ -178,7 +178,7 @@ static inline void printingDrawPage(void)
 
   GUI_SetColor(DARKGRAY);
   GUI_FillPrect(&rect_of_keyPrint[PBR_RECT_POS]);
-  GUI_SetColor(ORANGE);
+  GUI_SetColor(GRAY);
   GUI_DrawPrect(&rect_of_keyPrint[PBR_RECT_POS]);
   GUI_RestoreColorDefault();
 }
