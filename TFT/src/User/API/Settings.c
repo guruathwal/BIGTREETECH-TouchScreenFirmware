@@ -91,6 +91,9 @@ void infoSettingsReset(void)
   infoSettings.z_raise_probing        = PROBING_Z_RAISE;
   infoSettings.z_steppers_alignment   = DISABLED;
 
+  infoSettings.machineLED_en          = DISABLED;
+  infoSettings.machineLED_color       = 0;
+  
 // Power Supply Settings
   infoSettings.auto_off               = DISABLED;
   infoSettings.ps_active_high         = PS_ON_ACTIVE_HIGH;
@@ -242,6 +245,9 @@ void setupMachine(void)
   {
     mustStoreCmd("M555 P2\n");  //  Set RRF compatibility behaves similar to 2: Marlin
   }
+
+  if (infoSettings.machineLED_en == 1)
+    restoreLEDValues();
 }
 
 float flashUsedPercentage(void)

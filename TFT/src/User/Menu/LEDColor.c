@@ -3,8 +3,8 @@
 
 // value ranges
 #define LED_UPDATE_TIME 1000  // 1 seconds is 1000
-#define LED_MIN_VALUE   0
-#define LED_MAX_VALUE   255
+#define LED_MIN_VALUE      0
+#define LED_MAX_VALUE    255
 
 // data structures
 #define LED_VECT_SIZE 6
@@ -176,6 +176,16 @@ void ledSetValue(const LED_VECT * led, bool skipNeopixel)
     ledValue[i] = (*led)[i];
 }
 
+void restoreLEDValues(void)
+{
+  if (infoSettings.machineLED_color < MACHINE_LED_PRESET_COUNT)
+  {
+    STRINGS_STORE tempST;
+    W25Qxx_ReadBuffer((uint8_t *)&tempST, STRINGS_STORE_ADDR, sizeof(STRINGS_STORE));
+    storeCmd(tempST.rgb_preset_code[infoSettings.machineLED_color]);
+  }
+}
+
 uint8_t ledGetComponentIndex(uint8_t index)
 {
   return ledPage * PAGE_ITEMS + index;
@@ -189,14 +199,12 @@ static inline uint8_t ledGetComponentValue(uint8_t index)
 static inline uint8_t ledEditComponentValue(uint8_t index)
 {
   uint8_t realIndex = ledGetComponentIndex(index);
-
   return ledValue[realIndex] = editIntValue(LED_MIN_VALUE, LED_MAX_VALUE, ledValue[realIndex], ledValue[realIndex]);
 }
 
 uint8_t ledUpdateComponentValue(uint8_t index, int8_t unit, int8_t direction)
 {
   uint8_t realIndex = ledGetComponentIndex(index);
-
   return ledValue[realIndex] = NOBEYOND(LED_MIN_VALUE, ledValue[realIndex] + (int16_t) (direction * unit), LED_MAX_VALUE);
 }
 
@@ -508,25 +516,34 @@ void menuLEDColorCustom(void)
   GUI_RestoreColorDefault();
 }
 
-const MENUITEMS LEDColorItems = {
-  // title
-  LABEL_RGB_SETTINGS,
-  // icon                          label
-  {
-    {ICON_RGB_RED,                 LABEL_RED},
-    {ICON_RGB_GREEN,               LABEL_GREEN},
-    {ICON_RGB_BLUE,                LABEL_BLUE},
-    {ICON_RGB_WHITE,               LABEL_WHITE},
-    {ICON_CUSTOM,                  LABEL_CUSTOM},
-    {ICON_RGB_WHITE,               LABEL_ON},
-    {ICON_RGB_OFF,                 LABEL_OFF},
-    {ICON_BACK,                    LABEL_BACK},
-  }
-};
-
 void menuLEDColor(void)
 {
+
+  MENUITEMS LEDColorItems = {
+    // title
+    LABEL_RGB_SETTINGS,
+    // icon            label
+    {
+      {ICON_RGB_RED,   LABEL_RED},
+      {ICON_RGB_GREEN, LABEL_GREEN},
+      {ICON_RGB_BLUE,  LABEL_BLUE},
+      {ICON_RGB_WHITE, LABEL_WHITE},
+      {ICON_CUSTOM,    LABEL_CUSTOM},
+      {ICON_RGB_WHITE, LABEL_ON},
+      {ICON_RGB_OFF,   LABEL_OFF},
+      {ICON_BACK,      LABEL_BACK},
+    }
+  };
+
   KEY_VALUES key_num = KEY_IDLE;
+  uint8_t oldColorIndex = infoSettings.machineLED_color;
+  STRINGS_STORE tempST;
+  W25Qxx_ReadBuffer((uint8_t *)&tempST, STRINGS_STORE_ADDR, sizeof(STRINGS_STORE));
+
+  for (uint8_t i = 0; i < 4; i++)
+  {
+    LEDColorItems.items[i].label.address = &tempST.rgb_preset_name[i];
+  }
 
   menuDrawPage(&LEDColorItems);
 
@@ -537,27 +554,20 @@ void menuLEDColor(void)
     {
       // red
       case KEY_ICON_0:
-        ledSetValue(&ledRed, true);
-        break;
-
-      // green
       case KEY_ICON_1:
-        ledSetValue(&ledGreen, true);
-        break;
-
-      // blue
       case KEY_ICON_2:
-        ledSetValue(&ledBlue, true);
-        break;
-
-      // white
       case KEY_ICON_3:
-        ledSetValue(&ledWhite, true);
+        storeCmd(tempST.rgb_preset_code[key_num]);
+        infoSettings.machineLED_color = key_num;
         break;
 
       // custom LED color
       case KEY_ICON_4:
         infoMenu.menu[++infoMenu.cur] = menuLEDColorCustom;
+        break;
+
+      case KEY_ICON_5:
+        storeCmd(tempST.rgb_preset_code[infoSettings.machineLED_color]);
         break;
 
       // turn off
@@ -573,9 +583,10 @@ void menuLEDColor(void)
         break;
     }
 
-    if (key_num <= KEY_ICON_5)  // change LED color
-      ledSendValue(&ledValue);
-
     loopProcess();
   }
+
+  if (oldColorIndex != infoSettings.machineLED_color)
+  storePara();
+
 }

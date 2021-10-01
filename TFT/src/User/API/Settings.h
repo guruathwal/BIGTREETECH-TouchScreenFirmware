@@ -33,7 +33,7 @@ typedef enum
 #define CONFIG_SUPPPORT 20210513
 
 #define FONT_FLASH_SIGN       20210522  // (YYYYMMDD) change if fonts require updating
-#define CONFIG_FLASH_SIGN     20210921  // (YYYYMMDD) change if any keyword(s) in config.ini is added or removed
+#define CONFIG_FLASH_SIGN     20210928  // (YYYYMMDD) change if any keyword(s) in config.ini is added or removed
 #define LANGUAGE_FLASH_SIGN   20210522  // (YYYYMMDD) change if any keyword(s) in language pack is added or removed
 #define ICON_FLASH_SIGN       20210522  // (YYYYMMDD) change if any icon(s) is added or removed
 
@@ -50,14 +50,15 @@ typedef enum
 #define MAX_CRTL_FAN_COUNT    2
 #define MAX_FAN_COUNT         (MAX_COOLING_FAN_COUNT + MAX_CRTL_FAN_COUNT)
 
-#define AXIS_NUM              (TOTAL_AXIS - 1)
-#define SPEED_COUNT            3
-#define PREHEAT_COUNT          6
-#define CUSTOM_GCODES_COUNT   15
-#define MAX_STRING_LENGTH     20
-#define MAX_LABEL_LENGTH       7
-#define MAX_GCODE_NAME_LENGTH 24
-#define MAX_GCODE_LENGTH      75
+#define AXIS_NUM                   (TOTAL_AXIS - 1)
+#define SPEED_COUNT                3
+#define PREHEAT_COUNT              6
+#define MACHINE_LED_PRESET_COUNT   4
+#define CUSTOM_GCODES_COUNT       15
+#define MAX_STRING_LENGTH         20
+#define MAX_LABEL_LENGTH           7
+#define MAX_GCODE_NAME_LENGTH     24
+#define MAX_GCODE_LENGTH          75
 
 #define MIN_STRING_LENGTH      3
 #define MIN_LABEL_LENGTH       3
@@ -163,6 +164,10 @@ typedef struct
   uint8_t  z_steppers_alignment;
 
   uint16_t level_feedrate[FEEDRATE_COUNT - 1];  // XY, Z
+
+  uint8_t  machineLED_en;
+  uint8_t  machineLED_color;
+
   uint16_t preheat_temp[PREHEAT_COUNT];
   uint16_t preheat_bed[PREHEAT_COUNT];
 
@@ -208,7 +213,9 @@ typedef struct
 typedef struct
 {
   char marlin_title[MAX_GCODE_LENGTH + 1];
-  char preheat_name[PREHEAT_COUNT][MAX_GCODE_LENGTH + 1];
+  char preheat_name[PREHEAT_COUNT][MAX_GCODE_NAME_LENGTH + 1];
+  char rgb_preset_name[MACHINE_LED_PRESET_COUNT][MAX_GCODE_LENGTH + 1];
+  char rgb_preset_code[MACHINE_LED_PRESET_COUNT][MAX_GCODE_NAME_LENGTH + 1];
 } STRINGS_STORE;
 
 typedef struct

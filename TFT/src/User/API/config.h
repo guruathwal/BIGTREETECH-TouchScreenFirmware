@@ -85,6 +85,17 @@ extern "C" {
 #define CONFIG_XY_OFFSET_PROBING      "xy_offset_probing:"
 #define CONFIG_Z_RAISE_PROBING        "z_raise_probing:"
 #define CONFIG_Z_STEPPERS_ALIGNMENT   "z_steppers_alignment:"
+
+#define CONFIG_MACHINE_LED_ENABLE     "machine_led_en:"
+#define CONFIG_MACHINE_LED_NAME_1     "machine_led_name1:"
+#define CONFIG_MACHINE_LED_NAME_2     "machine_led_name2:"
+#define CONFIG_MACHINE_LED_NAME_3     "machine_led_name3:"
+#define CONFIG_MACHINE_LED_NAME_4     "machine_led_name4:"
+#define CONFIG_MACHINE_LED_PRESET_1   "machine_led_preset1:"
+#define CONFIG_MACHINE_LED_PRESET_2   "machine_led_preset2:"
+#define CONFIG_MACHINE_LED_PRESET_3   "machine_led_preset3:"
+#define CONFIG_MACHINE_LED_PRESET_4   "machine_led_preset4:"
+
 #define CONFIG_PREHEAT_NAME_1         "preheat_name1:"
 #define CONFIG_PREHEAT_NAME_2         "preheat_name2:"
 #define CONFIG_PREHEAT_NAME_3         "preheat_name3:"

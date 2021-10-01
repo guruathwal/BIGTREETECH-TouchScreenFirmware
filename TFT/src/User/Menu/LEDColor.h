@@ -5,6 +5,7 @@
 extern "C" {
 #endif
 
+void restoreLEDValues(void);
 void menuLEDColor(void);
 
 #ifdef __cplusplus

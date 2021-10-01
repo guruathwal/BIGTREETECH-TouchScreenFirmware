@@ -26,13 +26,15 @@ const char * const config_keywords[CONFIG_COUNT] = {
 const char * const cgList[] = CUSTOM_GCODE_LIST;
 const char * const cgNames[] = CUSTOM_GCODE_LABELS;
 const char * const preheatNames[] = PREHEAT_LABELS;
+const char * const ledPresetNames[] = MACHINE_LED_NAMES;
+const char * const ledPresetCode[] = MACHINE_LED_PRESETS;
 
-CONFIGFILE* CurConfigFile;
-CUSTOM_GCODES* configCustomGcodes = NULL;
-PRINT_GCODES* configPrintGcodes = NULL;
-STRINGS_STORE* configStringsStore = NULL;
+CONFIGFILE *CurConfigFile;
+CUSTOM_GCODES *configCustomGcodes = NULL;
+PRINT_GCODES *configPrintGcodes = NULL;
+STRINGS_STORE *configStringsStore = NULL;
 
-char * cur_line = NULL;
+char *cur_line = NULL;
 uint16_t c_index = 0;
 uint16_t foundkeys = 0;
 uint8_t customcode_index = 0;
@@ -441,7 +443,13 @@ void resetConfig(void)
 
   for (int i = 0; i < PREHEAT_COUNT; i++)
   {
-    strcpy(tempST.preheat_name[i],preheatNames[i]);
+    strcpy(tempST.preheat_name[i], preheatNames[i]);
+  }
+
+  for (int i = 0; i < MACHINE_LED_PRESET_COUNT; i++)
+  {
+    strcpy(tempST.rgb_preset_name[i], ledPresetNames[i]);
+    strcpy(tempST.rgb_preset_code[i], ledPresetCode[i]);
   }
 
   // restore print gcodes
@@ -837,6 +845,38 @@ void parseConfigKey(uint16_t index)
       infoSettings.z_steppers_alignment = getOnOff();
       break;
 
+    case C_INDEX_MACHINE_LED_ENABLE:
+      infoSettings.machineLED_en = getOnOff();
+      break;
+
+    case C_INDEX_MACHINE_LED_NAME_1:
+    case C_INDEX_MACHINE_LED_NAME_2:
+    case C_INDEX_MACHINE_LED_NAME_3:
+    case C_INDEX_MACHINE_LED_NAME_4:
+    {
+      char pchr[LINE_MAX_CHAR];
+      strcpy(pchr, strrchr(cur_line, ':') + 1);
+      int utf8len = getUTF8Length((uint8_t *)pchr);
+      int bytelen = strlen(pchr) + 1;
+      if (inLimit(utf8len, MIN_STRING_LENGTH, MAX_STRING_LENGTH) && inLimit(bytelen, MIN_STRING_LENGTH, MAX_STRING_LENGTH))
+        strcpy(configStringsStore->rgb_preset_name[index - C_INDEX_MACHINE_LED_NAME_1], pchr);
+      break;
+    }
+
+    case C_INDEX_MACHINE_LED_PRESET_1:
+    case C_INDEX_MACHINE_LED_PRESET_2:
+    case C_INDEX_MACHINE_LED_PRESET_3:
+    case C_INDEX_MACHINE_LED_PRESET_4:
+    {
+      char pchr[LINE_MAX_CHAR];
+      strcpy(pchr, strrchr(cur_line, ':') + 1);
+      int utf8len = getUTF8Length((uint8_t *)pchr);
+      int bytelen = strlen(pchr) + 1;
+      if (inLimit(utf8len, MIN_GCODE_LENGTH, MAX_GCODE_LENGTH) && inLimit(bytelen, MIN_GCODE_LENGTH, MAX_GCODE_LENGTH))
+        strcpy(configStringsStore->rgb_preset_code[index - C_INDEX_MACHINE_LED_PRESET_1], pchr);
+      break;
+    }
+
     case C_INDEX_PREHEAT_NAME_1:
     case C_INDEX_PREHEAT_NAME_2:
     case C_INDEX_PREHEAT_NAME_3:
@@ -848,7 +888,7 @@ void parseConfigKey(uint16_t index)
       strcpy(pchr, strrchr(cur_line, ':') + 1);
       int utf8len = getUTF8Length((uint8_t *)pchr);
       int bytelen = strlen(pchr) + 1;
-      if (inLimit(utf8len, NAME_MIN_LENGTH, MAX_STRING_LENGTH) && inLimit(bytelen, NAME_MIN_LENGTH, MAX_GCODE_LENGTH))
+      if (inLimit(utf8len, MIN_STRING_LENGTH, MAX_STRING_LENGTH) && inLimit(bytelen, MIN_STRING_LENGTH, MAX_STRING_LENGTH))
         strcpy(configStringsStore->preheat_name[index - C_INDEX_PREHEAT_NAME_1], pchr);
       break;
     }
