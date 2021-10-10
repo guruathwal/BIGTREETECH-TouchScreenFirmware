@@ -21,6 +21,16 @@ void loopScreensaver(void)
     return;
   }
 
+  // do not run screensaver is printing screen exist in menu array
+  for (uint8_t i = 0; i <= infoMenu.cur; i++)
+  {
+    if (infoMenu.menu[i] == menuPrinting)
+    {
+      screensaverTimer = OS_GetTimeMs();
+      return;
+    }
+  }
+
   if (isPress()
     #if LCD_ENCODER_SUPPORT
       || encoder_CheckState() || encoder_ReadBtn(LCD_BUTTON_INTERVALS)

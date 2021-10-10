@@ -7,12 +7,12 @@
 
 static BUTTON bottomSingleBtn = {
   //button location                       color before pressed   color after pressed
-  POPUP_RECT_SINGLE_CONFIRM, NULL, 5, 1,  DARKGREEN, DARKGREEN,  MAT_LOWWHITE, DARKGREEN, WHITE, DARKGREEN
+  POPUP_RECT_SINGLE_CONFIRM, NULL, 5, 1,  DARKGREEN, WHITE, DARKGREEN, DARKGREEN, MAT_LOWWHITE,  DARKGRAY
 };
 
 BUTTON bottomDoubleBtn[] = {
-  {POPUP_RECT_DOUBLE_CONFIRM, NULL, 5, 1, DARKGREEN, DARKGREEN,  MAT_LOWWHITE, DARKGREEN, WHITE, DARKGREEN},
-  {POPUP_RECT_DOUBLE_CANCEL,  NULL, 5, 1, MAT_RED,     MAT_RED,  MAT_LOWWHITE,   MAT_RED, WHITE,   MAT_RED},
+  {POPUP_RECT_DOUBLE_CONFIRM, NULL, 5, 1, DARKGREEN, WHITE, DARKGREEN, DARKGREEN, MAT_LOWWHITE,  DARKGRAY},
+  {POPUP_RECT_DOUBLE_CANCEL,  NULL, 5, 1, MAT_RED,   WHITE, MAT_RED,   MAT_RED,   MAT_LOWWHITE,  DARKGRAY},
 };
 
 const GUI_RECT doubleBtnRect[] = {POPUP_RECT_DOUBLE_CONFIRM, POPUP_RECT_DOUBLE_CANCEL};
@@ -25,9 +25,9 @@ static WINDOW window = {
   POPUP_BOTTOM_HEIGHT,          //height of action bar
   2,                            //window border width
   GRAY,                         //window border color
-  {DARKGRAY, MAT_LOWWHITE},     //Title bar font color / background color
-  {DARKGRAY, MAT_LOWWHITE},     //Message area font color / background color
-  {DARKGRAY, MAT_LOWWHITE},     //actionbar font color / background color
+  {MAT_LOWWHITE, DARKGRAY},     //Title bar font color / background color
+  {MAT_LOWWHITE, DARKGRAY},     //Message area font color / background color
+  {MAT_LOWWHITE, DARKGRAY},     //actionbar font color / background color
 };
 
 static BUTTON *windowButton =  NULL;
