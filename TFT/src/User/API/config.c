@@ -853,6 +853,8 @@ void parseConfigKey(uint16_t index)
     case C_INDEX_MACHINE_LED_NAME_2:
     case C_INDEX_MACHINE_LED_NAME_3:
     case C_INDEX_MACHINE_LED_NAME_4:
+    case C_INDEX_MACHINE_LED_NAME_ON:
+    case C_INDEX_MACHINE_LED_NAME_OFF:
     {
       char pchr[LINE_MAX_CHAR];
       strcpy(pchr, strrchr(cur_line, ':') + 1);
@@ -867,6 +869,8 @@ void parseConfigKey(uint16_t index)
     case C_INDEX_MACHINE_LED_PRESET_2:
     case C_INDEX_MACHINE_LED_PRESET_3:
     case C_INDEX_MACHINE_LED_PRESET_4:
+    case C_INDEX_MACHINE_LED_PRESET_ON:
+    case C_INDEX_MACHINE_LED_PRESET_OFF:
     {
       char pchr[LINE_MAX_CHAR];
       strcpy(pchr, strrchr(cur_line, ':') + 1);

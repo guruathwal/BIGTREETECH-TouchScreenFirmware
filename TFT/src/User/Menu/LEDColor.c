@@ -150,7 +150,7 @@ const LED_VECT ledRed =   {0xFF, 0x00, 0x00, 0x00, 0xFF, 0xFF};
 const LED_VECT ledGreen = {0x00, 0xFF, 0x00, 0x00, 0xFF, 0xFF};
 const LED_VECT ledBlue =  {0x00, 0x00, 0xFF, 0x00, 0xFF, 0xFF};
 const LED_VECT ledWhite = {0xFF, 0xFF, 0xFF, 0x00, 0xFF, 0xFF};
-const LED_VECT ledOff =   {0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+//const LED_VECT ledOff =   {0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
 
 LED_VECT ledValue = {0x00, 0x00, 0x00, 0x00, 0xFF, 0xFF};
 
@@ -528,9 +528,9 @@ void menuLEDColor(void)
       {ICON_RGB_GREEN, LABEL_GREEN},
       {ICON_RGB_BLUE,  LABEL_BLUE},
       {ICON_RGB_WHITE, LABEL_WHITE},
-      {ICON_CUSTOM,    LABEL_CUSTOM},
       {ICON_RGB_WHITE, LABEL_ON},
       {ICON_RGB_OFF,   LABEL_OFF},
+      {ICON_CUSTOM,    LABEL_CUSTOM},
       {ICON_BACK,      LABEL_BACK},
     }
   };
@@ -540,7 +540,7 @@ void menuLEDColor(void)
   STRINGS_STORE tempST;
   W25Qxx_ReadBuffer((uint8_t *)&tempST, STRINGS_STORE_ADDR, sizeof(STRINGS_STORE));
 
-  for (uint8_t i = 0; i < 4; i++)
+  for (uint8_t i = 0; i < MACHINE_LED_PRESET_COUNT; i++)
   {
     LEDColorItems.items[i].label.address = &tempST.rgb_preset_name[i];
   }
@@ -557,22 +557,15 @@ void menuLEDColor(void)
       case KEY_ICON_1:
       case KEY_ICON_2:
       case KEY_ICON_3:
+      case KEY_ICON_4:  // turn on
+      case KEY_ICON_5:  // turn off
         storeCmd(tempST.rgb_preset_code[key_num]);
         infoSettings.machineLED_color = key_num;
         break;
 
       // custom LED color
-      case KEY_ICON_4:
-        infoMenu.menu[++infoMenu.cur] = menuLEDColorCustom;
-        break;
-
-      case KEY_ICON_5:
-        storeCmd(tempST.rgb_preset_code[infoSettings.machineLED_color]);
-        break;
-
-      // turn off
       case KEY_ICON_6:
-        ledSendValue(&ledOff);
+        infoMenu.menu[++infoMenu.cur] = menuLEDColorCustom;
         break;
 
       case KEY_ICON_7:

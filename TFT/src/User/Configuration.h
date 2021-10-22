@@ -560,8 +560,9 @@
 //
 // Machine LED Color Presets (M150)
 //
-#define MACHINE_LED_NAMES   {"Red", "Green", "Blue", "White"}
-#define MACHINE_LED_PRESETS {"M150 R255 U0 B0\n", "M150 R0 U255 B0\n", "M150 R0 U0 B255\n", "M150 R255 U255 B255\n"}
+#define MACHINE_LED_NAMES   {"Red", "Green", "Blue", "White", "ON", "OFF"}
+#define MACHINE_LED_PRESETS {"M150 R255 U0 B0\n", "M150 R0 U255 B0\n", "M150 R0 U0 B255\n", "M150 R255 U255 B255\n", \
+                             "M150 R255 U255 B255\n", "M150 R0 U0 B0\n"}
 
 /**
  * Custom G-code Commands
